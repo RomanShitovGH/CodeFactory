@@ -1,6 +1,7 @@
 import React from "react";
 import Nav from "../components/Navigation.jsx";
 import ProductBox from "../components/ProductBox.jsx";
+import { Link } from "react-router-dom";
 
 export default class ProductPage extends React.Component {
   render() {
@@ -22,7 +23,9 @@ export default class ProductPage extends React.Component {
                   <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
                     <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a href="#">Каталог</a></li>
+                        <li className="breadcrumb-item">
+                          <Link to="/">Каталог</Link>
+                        </li>
                         <li className="breadcrumb-item"><a href="#">Вентиляция</a></li>
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
                       </ol>
