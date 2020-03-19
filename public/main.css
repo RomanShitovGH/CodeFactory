@@ -1,0 +1,36 @@
+header .nav-link{
+  color: white;
+  font-weight: 500;
+}
+
+.nav-link.active{
+  color: white;
+}
+
+header .navbar {
+  margin: 0 -15px 0 -15px;
+  padding: .5rem 0.5rem;
+}
+
+main {
+  background-color: #cbcbcb;
+  font-weight: 500;
+}
+
+.fon {
+  background-color: white;
+}
+
+.breadcrumb, div > img, .col-9 {
+  margin: 15px 0 0 0;
+}
+
+footer {
+  color: white;
+  font-weight: 500;
+  margin: 15px 0 0 0;
+}
+
+.card-deck {
+  padding: 15px 15px 15px 15px;
+}
