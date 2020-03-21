@@ -1,12 +1,14 @@
 const ProductService = require("./ProductService.js");
 
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
+
 const ejs = require("ejs");
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
 function handler(req, res) {
-    let filename;
     const URL = require("url");
     const parsedURL = URL.parse(req.url);
     
@@ -14,10 +16,11 @@ function handler(req, res) {
         serveStatic(req, res, path.basename(req.url))    
     } else if ((parsedURL.pathname.indexOf("/product/") === 0) || (path.basename(req.url) === "") ) {
         serveSPA(req, res);
+    } else if ((parsedURL.pathname.indexOf("/api/products") === 0)) {
+        serveAPI(req, res);
     } else {
         serveNotFound(req, res)
-    }
-    
+    }   
 }
 
 function serveStatic(req, res, customFileName, pathname) {
@@ -57,6 +60,39 @@ function serveSPA(req, res) {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.end(spa.toString());
+}
+
+function serveAPI(req, res) {
+    //let id;
+    const stroka = req.url.slice(1);
+    splitURL = stroka.split('/');
+    if (splitURL.length > 2) {
+        id = splitURL[2];    
+        ProductService.findById(id)
+        .then( result => {   
+            if (result) { 
+                const body = JSON.stringify(result);
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "application/json");
+                res.write(body);
+                res.end();     
+            } else {
+                serveNotFound(req, res, "Введенный вами товар не найден");
+            }     
+        })
+    } else {
+        ProductService.getProducts()
+        .then( result => {
+            if (result) {
+                const body = JSON.stringify(result);
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "application/json");
+                res.write(body);
+                res.end();
+            }
+        });
+    }
+    //const id = '5e6d44aafb58a990f4959eeb';   
 }
 
 function serveIndex(req, res, customFileName) {
@@ -122,7 +158,9 @@ function serveNotFound(req, res, customText) {
     res.end();
 }
 
-const server = http.createServer(handler);
 
 ProductService.init();
+
+const server = http.createServer(handler);
+
 server.listen(3000); //process.env.PORT

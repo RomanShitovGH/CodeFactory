@@ -1,12 +1,12 @@
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
 let shopDatabase;
 let productCollection;
 
-//let products = [];
 module.exports = {
-  init() {
-    MongoClient.connect('mongodb://localhost:27017')
+  init() { //mongodb://localhost:27017
+    MongoClient.connect('mongodb://127.0.0.1:27017')
         .then(function (clientInstance) {
             shopDatabase = clientInstance.db("shop");
             productCollection = shopDatabase.collection("product");
@@ -22,6 +22,16 @@ module.exports = {
   getProductByKey(kod) {
     const found = shopDatabase.collection("product").findOne({key: Number(kod)}); 
     return found;
-  }
+  },
   
+  findById(id) {
+    
+    const u = productCollection.findOne({ _id: ObjectID(id) });
+    //  .then(function (products) {
+    //    if (products) {
+    //      return  products;  
+    //    }
+    //});
+    return u;
+  } 
 }
