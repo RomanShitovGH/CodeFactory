@@ -63,7 +63,6 @@ function serveSPA(req, res) {
 }
 
 function serveAPI(req, res) {
-    //let id;
     const stroka = req.url.slice(1);
     splitURL = stroka.split('/');
     if (splitURL.length > 2) {
@@ -91,8 +90,7 @@ function serveAPI(req, res) {
                 res.end();
             }
         });
-    }
-    //const id = '5e6d44aafb58a990f4959eeb';   
+    } 
 }
 
 function serveIndex(req, res, customFileName) {
@@ -114,30 +112,29 @@ function serveIndex(req, res, customFileName) {
 function serveProduct(req, res, customFileName, productUrl) {
     const partsURL = productUrl.replace("/product/", "").split("-");
     ProductService.getProductByKey(partsURL[0])
-            .then( result => {
-                if (result === null) {
-                    serveNotFound(req, res, "Введенный вами товар не найден")
-                } else { 
-                    const file = fs.readFileSync("public/" + customFileName).toString();
-                    const slugURL = productUrl.replace("/product/", "").slice(partsURL[0].length + 1);
-                    const slugBD = partsURL.slice(partsURL[0].length + 1);
-                    const template = ejs.compile(file);
-                    const scope = { product: result };
-                    const body = template(scope);
+        .then( result => {
+            if (result === null) {
+                serveNotFound(req, res, "Введенный вами товар не найден")
+            } else { 
+                const file = fs.readFileSync("public/" + customFileName).toString();
+                const slugURL = productUrl.replace("/product/", "").slice(partsURL[0].length + 1);
+                const template = ejs.compile(file);
+                const scope = { product: result };
+                const body = template(scope);
                     
-                    if (slugURL != result.slug) {
-                        res.statusCode = 301;
-                        res.setHeader("Location", `/product/+${partsURL[0]}-${result.slug}`);
-                    } else {
-                        res.statusCode = 200;
-                        res.setHeader("Content-Type", "text/html; charset=utf-8");    
-                    }
-                    
-                    res.write(body);
-                    res.end();
-                    
+                if (slugURL != result.slug) {
+                    res.statusCode = 301;
+                    res.setHeader("Location", `/product/+${partsURL[0]}-${result.slug}`);
+                } else {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "text/html; charset=utf-8");    
                 }
-            })
+                    
+                res.write(body);
+                res.end();
+                    
+            }
+        })
 }
 
 function serveNotFound(req, res, customText) {
