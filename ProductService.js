@@ -25,13 +25,12 @@ module.exports = {
   },
   
   findById(id) {
-    
-    const u = productCollection.findOne({ _id: ObjectID(id) });
-    //  .then(function (products) {
-    //    if (products) {
-    //      return  products;  
-    //    }
-    //});
-    return u;
+    let mongoId;
+    try {
+      mongoId = ObjectID(id);
+    } catch(err) {
+      return Promise.reject(new Error("500"));
+    }
+    return productCollection.findOne({ _id: mongoId });
   } 
 }

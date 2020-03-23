@@ -64,21 +64,24 @@ function serveSPA(req, res) {
 
 function serveAPI(req, res) {
     const stroka = req.url.slice(1);
-    splitURL = stroka.split('/');
+    const splitURL = stroka.split('/');
     if (splitURL.length > 2) {
-        id = splitURL[2];    
+        const id = splitURL[2];    
         ProductService.findById(id)
-        .then( result => {   
-            if (result) { 
-                const body = JSON.stringify(result);
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.write(body);
-                res.end();     
-            } else {
-                serveNotFound(req, res, "Введенный вами товар не найден");
-            }     
-        })
+            .then( result => {   
+                if (result) { 
+                    const body = JSON.stringify(result);
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/json");
+                    res.write(body);
+                    res.end();     
+                } else {
+                    serveNotFound(req, res, "Введенный вами товар не найден");
+                }     
+            })
+            .catch( err => {
+                serveNotFound(req, res, err.message);
+            })
     } else {
         ProductService.getProducts()
         .then( result => {
@@ -141,15 +144,21 @@ function serveNotFound(req, res, customText) {
     let scope;
     const file = fs.readFileSync("public/index.html").toString();;
     const template = ejs.compile(file);
-       
+    
     if (customText) {
-        scope = { products: {customText: customText} };
+        if (customText === "500") {
+            scope = { products: {customText: "Ошибка в идентификаторе товара. Ответ сервера: 500"} };
+            res.statusCode = 500;
+        } else {
+            scope = { products: {customText: customText} };
+            res.statusCode = 200;
+        } 
     } else {
         scope = { products: {customText: "Введенная вами страница на сайте не обнаружена"} };
+        res.statusCode = 200;
     }
     
     const body = template(scope);
-    res.statusCode = 200;
     res.setHeader("Content-Type", "text/html; charset=utf-8"); 
     res.write(body);
     res.end();
@@ -160,4 +169,4 @@ ProductService.init();
 
 const server = http.createServer(handler);
 
-server.listen(3000); //process.env.PORT
+server.listen(process.env.PORT); //3000
