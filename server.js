@@ -80,7 +80,7 @@ function serveAPI(req, res) {
                 }     
             })
             .catch( err => {
-                serveNotFound(req, res, err.message);
+                serveInternalServerError(req, res, err.message);
             })
     } else {
         ProductService.getProducts()
@@ -96,75 +96,39 @@ function serveAPI(req, res) {
     } 
 }
 
-function serveIndex(req, res, customFileName) {
-    ProductService.getProducts()
-        .then( result => {
-            if (result) {
-                const file = fs.readFileSync("public/" + customFileName).toString();
-                const scope = { products: result };
-                const template = ejs.compile(file);
-                const body = template(scope);
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "text/html; charset=utf-8");
-                res.write(body);
-                res.end();
-            }
-        });     
-}
-
-function serveProduct(req, res, customFileName, productUrl) {
-    const partsURL = productUrl.replace("/product/", "").split("-");
-    ProductService.getProductByKey(partsURL[0])
-        .then( result => {
-            if (result === null) {
-                serveNotFound(req, res, "Введенный вами товар не найден")
-            } else { 
-                const file = fs.readFileSync("public/" + customFileName).toString();
-                const slugURL = productUrl.replace("/product/", "").slice(partsURL[0].length + 1);
-                const template = ejs.compile(file);
-                const scope = { product: result };
-                const body = template(scope);
-                    
-                if (slugURL != result.slug) {
-                    res.statusCode = 301;
-                    res.setHeader("Location", `/product/+${partsURL[0]}-${result.slug}`);
-                } else {
-                    res.statusCode = 200;
-                    res.setHeader("Content-Type", "text/html; charset=utf-8");    
-                }
-                    
-                res.write(body);
-                res.end();
-                    
-            }
-        })
-}
-
 function serveNotFound(req, res, customText) {
     let scope;
     const file = fs.readFileSync("public/index.html").toString();;
     const template = ejs.compile(file);
     
     if (customText) {
-        if (customText === "500") {
-            scope = { products: {customText: "Ошибка в идентификаторе товара. Ответ сервера: 500"} };
-            res.statusCode = 500;
-        } else {
-            scope = { products: {customText: customText} };
-            res.statusCode = 200;
-        } 
+        scope = { products: {customText: customText} };
     } else {
         scope = { products: {customText: "Введенная вами страница на сайте не обнаружена"} };
-        res.statusCode = 200;
     }
     
     const body = template(scope);
+    res.statusCode = 200;
     res.setHeader("Content-Type", "text/html; charset=utf-8"); 
     res.write(body);
     res.end();
 }
 
-
+function serveInternalServerError(req, res, customText) {
+    let scope;
+    const file = fs.readFileSync("public/index.html").toString();;
+    const template = ejs.compile(file);
+    
+    scope = { products: {customText: "Ошибка в идентификаторе товара. Ответ сервера: 500"} };
+    const body = template(scope);
+    
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "text/html; charset=utf-8"); 
+    res.write(body);
+    res.end();
+}
+  
+  
 ProductService.init();
 
 const server = http.createServer(handler);
