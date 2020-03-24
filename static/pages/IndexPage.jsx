@@ -7,17 +7,44 @@ const fetch = require("node-fetch");
 
 export default class IndexPage extends React.Component {
   componentDidMount(){
+    console.log("Функция componentDidMount() начала выполняться");
     fetch("/api/products")
       .then(function(response) {
         return response.json();
       })
       .then(function(json) {
-        console.log(json)
+        this.setState({
+          products: json
+        })
+        console.log("это THIS " + this.props);
+        ;
       }.bind(this))
   }
-
+  
+  // renderProducts() {
+  //   return  <div class="card-deck">
+  //             <div class="card">
+  //               <img class="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
+  //               <div class="card-body">
+  //                 <h5 class="card-title">Первый товар</h5>
+  //                 <p class="card-text">Описание первого товара</p>
+  //                 <p class="card-text">Цена: 1000</p>
+  //                 <Link to="/product/12345-slug">Купить</Link>          
+  //               </div>
+  //             </div>
+  //           </div>;
+          
+  //   // Или можно вернуть сразу массив компонентов
+  //   // return this.state.products.map()
+  // }
       
   render() {
+    console.log("Сюда пришли"); 
+    //const items = this.props.products[0].title;  //.map((item, index) => {
+  	   //return <a className={ (index === this.state.activeIndex) ? "nav-item nav-link active" : "nav-item nav-link" } data-index={index} onClick={ this.onClickLink } href="#">{item}</a>
+   // console.log("Это пункты " + items);   
+    //});
+
     return  <div className="bg-secondary">
                 <header className="bg-primary">
                 <div className="row">
