@@ -6,6 +6,13 @@ const history = createBrowserHistory();
 const fetch = require("node-fetch");
 
 export default class IndexPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      products: {}  
+    }
+  }
+  
   componentDidMount(){
     console.log("Функция componentDidMount() начала выполняться");
     fetch("/api/products")
@@ -14,77 +21,80 @@ export default class IndexPage extends React.Component {
       })
       .then(function(json) {
         this.setState({
-          products: json
+          products: json 
         })
-        console.log("это THIS " + this.props);
+        console.log(this.state.products);
         ;
       }.bind(this))
   }
   
-  // renderProducts() {
-  //   return  <div class="card-deck">
-  //             <div class="card">
-  //               <img class="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-  //               <div class="card-body">
-  //                 <h5 class="card-title">Первый товар</h5>
-  //                 <p class="card-text">Описание первого товара</p>
-  //                 <p class="card-text">Цена: 1000</p>
-  //                 <Link to="/product/12345-slug">Купить</Link>          
-  //               </div>
-  //             </div>
-  //           </div>;
-          
-  //   // Или можно вернуть сразу массив компонентов
-  //   // return this.state.products.map()
-  // }
+   renderProducts() { 
+      //console.log("зашло в renderProducts()");
+      //if (!this.state.products) { return false; } 
+      //console.log(this.state.products);
+      this.state.products.map(product => {
+        return (
+          <div className="card">
+            бла бла бла
+            <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
+            <div className="card-body">
+              <h5 className="card-title">{product.title}</h5>
+              <p className="card-text">Описание первого товара</p>
+              <p className="card-text">Цена: 1000</p>
+              <Link to="/product/12345-slug">Купить</Link>          
+            </div>
+          </div>
+        );
+      }) 
+  } 
+   
       
   render() {
-    console.log("Сюда пришли"); 
-    //const items = this.props.products[0].title;  //.map((item, index) => {
-  	   //return <a className={ (index === this.state.activeIndex) ? "nav-item nav-link active" : "nav-item nav-link" } data-index={index} onClick={ this.onClickLink } href="#">{item}</a>
-   // console.log("Это пункты " + items);   
-    //});
-
-    return  <div className="bg-secondary">
+     return  <div className="bg-secondary">
                 <header className="bg-primary">
-                <div className="row">
-                  <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
-                    <nav className="navbar navbar-expand navbar-dark bg-primary">
-                      <div className="collapse navbar-collapse">
-                        <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
-                      </div>
-                    </nav>
+                  <div className="row">
+                    <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+                      <nav className="navbar navbar-expand navbar-dark bg-primary">
+                        <div className="collapse navbar-collapse">
+                          <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
+                        </div>
+                      </nav>
+                    </div>
                   </div>
-                </div>
                 </header>
                 <main>
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
-                      <div class="card-deck">
-                        <div class="card">
-                          <img class="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div class="card-body">
-                            <h5 class="card-title">Первый товар</h5>
-                            <p class="card-text">Описание первого товара</p>
-                            <p class="card-text">Цена: 1000</p>
+                      <div className="card-deck">
+                      { 
+                          this.state.products
+                            ? this.renderProducts() 
+                            : false
+                        }
+                        <div className="card">
+                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
+                          <div className="card-body">
+                            <h5 className="card-title">Первый товар</h5>
+                            <p className="card-text">Описание первого товара</p>
+                            <p className="card-text">Цена: 1000</p>
                             <Link to="/product/12345-slug">Купить</Link>          
                           </div>
                         </div>
-                        <div class="card">
-                          <img class="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div class="card-body">
-                            <h5 class="card-title">Второй товар</h5>
-                            <p class="card-text">Описание второго товара</p>
-                            <p class="card-text">Цена: 2000</p>
+                        <div className="card">
+                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
+                          <div className="card-body">
+                            <h5 className="card-title">Второй товар</h5>
+                            <p className="card-text">Описание второго товара</p>
+                            <p className="card-text">Цена: 2000</p>
                             <Link to="/product/11111-slug">Купить</Link>          
                           </div>
                         </div>
-                        <div class="card">
-                          <img class="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div class="card-body">
-                            <h5 class="card-title">Третий товар</h5>
-                            <p class="card-text">Описание третьего товара</p>
-                            <p class="card-text">Цена: 3000</p>
+                        <div className="card">
+                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
+                          <div className="card-body">
+                            <h5 className="card-title">Третий товар</h5>
+                            <p className="card-text">Описание третьего товара</p>
+                            <p className="card-text">Цена: 3000</p>
                             <Link to="/product/22222-slug">Купить</Link>          
                           </div>
                         </div>
