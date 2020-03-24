@@ -3,8 +3,20 @@ import Nav from "../components/Navigation.jsx";
 import { Link } from "react-router-dom";
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
+const fetch = require("node-fetch");
 
 export default class IndexPage extends React.Component {
+  componentDidMount(){
+    fetch("/api/products")
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(json) {
+        console.log(json)
+      }.bind(this))
+  }
+
+      
   render() {
     return  <div className="bg-secondary">
                 <header className="bg-primary">
