@@ -128,7 +128,7 @@ function serveInternalServerError(req, res, customText) {
     res.end();
 }
   
-
+  
 ProductService.init();
 
 const server = http.createServer(handler);
