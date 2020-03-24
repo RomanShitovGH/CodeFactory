@@ -127,7 +127,7 @@ function serveInternalServerError(req, res, customText) {
     res.write(body);
     res.end();
 }
- 
+  
 
 ProductService.init();
 
