@@ -86,11 +86,12 @@ function serveAPI(req, res) {
         ProductService.getProducts()
         .then( result => {
             if (result) {
+                setTimeout(function() {
                 const body = JSON.stringify(result);
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
                 res.write(body);
-                res.end();
+                res.end(); }, 2000);
             }
         });
     } 

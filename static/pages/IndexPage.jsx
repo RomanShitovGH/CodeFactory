@@ -9,25 +9,52 @@ export default class IndexPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      products: []  
+      products: [],
+      status: "idle"  
     }
   }
   
   componentDidMount() {
-    console.log("Функция componentDidMount() начала выполняться");
+    this.setState({
+      status: "pending"
+    });
     fetch("/api/products")
       .then(function (response) {
         return response.json();
       })
       .then(function (json) {
+        
         this.setState({
-          products: json
-        });
-      }.bind(this)
-      )
-      
+          products: json,
+          status: "ready"
+        })        
+      }.bind(this))
+      .catch(function(err) {
+        this.setState({
+            status: "error"
+          });
+        }) 
   }
   
+  renderStatus() {
+    switch (this.state.status) {
+      case "ready":
+        return ( <div className="alert alert-primary" role="alert">
+                 Данные загружены
+               </div> );
+      case "error":
+        return ( <div className="alert alert-danger" role="alert">
+                 Ошибка при получении данных
+               </div> );
+      case "pending":
+        return ( <div className="alert alert-warning" role="alert">
+                 Загружаю данные
+               </div>);
+      default:
+        return false; 
+    }     
+  }
+
   renderProducts() {
     return this.state.products.map(product => {
       return (
@@ -43,8 +70,6 @@ export default class IndexPage extends React.Component {
       );
     })
   }
-   
-   
       
   render() {
      return  <div className="bg-secondary">
@@ -62,38 +87,13 @@ export default class IndexPage extends React.Component {
                 <main>
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
+                      {this.renderStatus()}
                       <div className="card-deck">
-                      { this.state.products
-                          ? this.renderProducts() 
-                            : false
-                      }
-                        {/* <div className="card">
-                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div className="card-body">
-                            <h5 className="card-title">Первый товар</h5>
-                            <p className="card-text">Описание первого товара</p>
-                            <p className="card-text">Цена: 1000</p>
-                            <Link to="/product/12345-slug">Купить</Link>          
-                          </div>
-                        </div>
-                        <div className="card">
-                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div className="card-body">
-                            <h5 className="card-title">Второй товар</h5>
-                            <p className="card-text">Описание второго товара</p>
-                            <p className="card-text">Цена: 2000</p>
-                            <Link to="/product/11111-slug">Купить</Link>          
-                          </div>
-                        </div>
-                        <div className="card">
-                          <img className="card-img-top" src="https://www.codery.school/content/course/lesson3-task-img.png" alt="Card image cap"/> 
-                          <div className="card-body">
-                            <h5 className="card-title">Третий товар</h5>
-                            <p className="card-text">Описание третьего товара</p>
-                            <p className="card-text">Цена: 3000</p>
-                            <Link to="/product/22222-slug">Купить</Link>          
-                          </div>
-                        </div> */}
+                        { 
+                          this.state.products
+                            ? this.renderProducts() 
+                              : false
+                        }
                       </div>      
                     </div>
                   </div>
