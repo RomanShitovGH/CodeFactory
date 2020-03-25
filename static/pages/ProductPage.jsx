@@ -4,6 +4,33 @@ import ProductBox from "../components/ProductBox.jsx";
 import { Link } from "react-router-dom";
 
 export default class ProductPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      //  
+    }
+  }
+  
+  componentDidMount() {
+    fetch("/api/products?key="+this.props.match.params.product)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        
+        this.setState({
+          products: json,
+          status: "ready"
+        })        
+      }.bind(this))
+      .catch(function(err) {
+        this.setState({
+            status: "error"
+          });
+        }) 
+  }
+  
+  
   render() {
      
      return <div className="bg-secondary">
