@@ -13,10 +13,28 @@ module.exports = {
         })
   },
   
-  getProducts() {
-    const cursor = productCollection.find();
-    const promise = cursor.toArray();
-    return promise;
+  getProducts(where) {
+    
+    if (Object.keys(where).length != 0) {
+      if (where.key) {
+        const keyProduct = Number(where.key);
+        return productCollection.findOne({ key: keyProduct });
+      } else if (where.price) {
+        const priceProduct = Number(where.price);
+        return productCollection.findOne({ price: priceProduct });
+      } else {
+        return productCollection.findOne(where);
+      }
+    } else {
+      const cursor = productCollection.find();
+      const promise = cursor.toArray();
+      return promise;
+    }
+
+    // const cursor = productCollection.find();
+    // const promise = cursor.toArray();
+    // return promise;
+
   },
   
   getProductByKey(kod) {

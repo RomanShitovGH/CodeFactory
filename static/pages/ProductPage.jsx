@@ -7,7 +7,7 @@ export default class ProductPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      //  
+      product: []  
     }
   }
   
@@ -17,16 +17,12 @@ export default class ProductPage extends React.Component {
         return response.json();
       })
       .then(function (json) {
-        
         this.setState({
-          products: json,
-          status: "ready"
+          product: json
         })        
       }.bind(this))
       .catch(function(err) {
-        this.setState({
-            status: "error"
-          });
+        //
         }) 
   }
   
@@ -57,14 +53,15 @@ export default class ProductPage extends React.Component {
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
                       </ol>
                     </nav>
-                    <ProductBox title="ПВУ Turkov ZENIT 350 HECO">
+                    <ProductBox title={this.state.product.title}>
                       <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
                       <div className="row">
                         <div className="col-3">
-                          <img className="img-fluid" src="https://www.codery.school/content/course/lesson3-task-img.png"/>
+                          <img className="img-fluid" src={this.state.product.img}/>
                         </div>
                         <div className="col-9">
-                          <p>Вентеляционная установка с рекуперацией тепла и влаги в легком и универсальном корпусе из вспененного полипропилена предназначена для поддержания климата в жилых помещениях, или небольших офисах, магазинах.</p>
+                          <p>{this.state.product.description}</p>
+                          <p>Цена: {this.state.product.price}</p>
                           <hr/>
                           <button type="button" className="btn btn-primary">Заказать</button>
                           <br/><br/>

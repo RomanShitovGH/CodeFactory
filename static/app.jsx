@@ -18,6 +18,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/" component={ Page1 } />
                 <Route exact path="/product/:product" component={ Page2 } />
+                <Route exact path="/api/products?:product" component={ Page2 } />
               </Switch>
             </Router>;
   }

@@ -1,5 +1,5 @@
 const ProductService = require("./ProductService.js");
-
+const queryString = require('query-string');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
@@ -63,38 +63,44 @@ function serveSPA(req, res) {
 }
 
 function serveAPI(req, res) {
-    const stroka = req.url.slice(1);
-    const splitURL = stroka.split('/');
-    if (splitURL.length > 2) {
-        const id = splitURL[2];    
-        ProductService.findById(id)
-            .then( result => {   
-                if (result) { 
-                    const body = JSON.stringify(result);
-                    res.statusCode = 200;
-                    res.setHeader("Content-Type", "application/json");
-                    res.write(body);
-                    res.end();     
-                } else {
-                    serveNotFound(req, res, "Введенный вами товар не найден");
-                }     
-            })
-            .catch( err => {
-                serveInternalServerError(req, res, err.message);
-            })
-    } else {
-        ProductService.getProducts()
+    const URL = require("url");
+    const parsedURL = URL.parse(req.url);
+    const parsed = queryString.parse(parsedURL.search);
+    
+    // const stroka = req.url.slice(1);
+    // const splitURL = stroka.split('/');
+    // if (splitURL.length > 2) {
+    //     const id = splitURL[2];    
+    //     ProductService.findById(id)
+    //         .then( result => {   
+    //             if (result) { 
+    //                 const body = JSON.stringify(result);
+    //                 res.statusCode = 200;
+    //                 res.setHeader("Content-Type", "application/json");
+    //                 res.write(body);
+    //                 res.end();     
+    //             } else {
+    //                 serveNotFound(req, res, "Введенный вами товар не найден");
+    //             }     
+    //         })
+    //         .catch( err => {
+    //             serveInternalServerError(req, res, err.message);
+    //         })
+    // } else {
+        ProductService.getProducts(parsed)
         .then( result => {
             if (result) {
-                setTimeout(function() {
                 const body = JSON.stringify(result);
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
                 res.write(body);
-                res.end(); }, 2000);
+                res.end(); 
             }
-        });
-    } 
+        })
+        .catch( err => {
+            serveInternalServerError(req, res, err.message);
+        })
+    // } 
 }
 
 function serveNotFound(req, res, customText) {
