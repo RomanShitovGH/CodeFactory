@@ -66,7 +66,7 @@ function serveAPI(req, res) {
     const URL = require("url");
     const parsedURL = URL.parse(req.url);
     const parsed = queryString.parse(parsedURL.search);
-    
+     
     ProductService.getProducts(parsed)
     .then( result => {
         if (result) {
@@ -120,4 +120,4 @@ ProductService.init();
 
 const server = http.createServer(handler);
 
-server.listen(3000); //3000 process.env.PORT
+server.listen(process.env.PORT); //3000 process.env.PORT
