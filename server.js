@@ -67,45 +67,25 @@ function serveAPI(req, res) {
     const parsedURL = URL.parse(req.url);
     const parsed = queryString.parse(parsedURL.search);
     
-    // const stroka = req.url.slice(1);
-    // const splitURL = stroka.split('/');
-    // if (splitURL.length > 2) {
-    //     const id = splitURL[2];    
-    //     ProductService.findById(id)
-    //         .then( result => {   
-    //             if (result) { 
-    //                 const body = JSON.stringify(result);
-    //                 res.statusCode = 200;
-    //                 res.setHeader("Content-Type", "application/json");
-    //                 res.write(body);
-    //                 res.end();     
-    //             } else {
-    //                 serveNotFound(req, res, "Введенный вами товар не найден");
-    //             }     
-    //         })
-    //         .catch( err => {
-    //             serveInternalServerError(req, res, err.message);
-    //         })
-    // } else {
-        ProductService.getProducts(parsed)
-        .then( result => {
-            if (result) {
-                const body = JSON.stringify(result);
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.write(body);
-                res.end(); 
-            }
-        })
-        .catch( err => {
-            serveInternalServerError(req, res, err.message);
-        })
-    // } 
+    ProductService.getProducts(parsed)
+    .then( result => {
+        if (result) {
+            const body = JSON.stringify(result);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.write(body);
+            res.end(); 
+        }
+    })
+    .catch( err => {
+        serveInternalServerError(req, res, err.message);
+    })
+   
 }
 
 function serveNotFound(req, res, customText) {
     let scope;
-    const file = fs.readFileSync("public/index.html").toString();;
+    const file = fs.readFileSync("public/index.html").toString();
     const template = ejs.compile(file);
     
     if (customText) {
@@ -140,4 +120,4 @@ ProductService.init();
 
 const server = http.createServer(handler);
 
-server.listen(process.env.PORT); //3000 process.env.PORT
+server.listen(3000); //3000 process.env.PORT

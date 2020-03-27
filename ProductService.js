@@ -14,7 +14,6 @@ module.exports = {
   },
   
   getProducts(where) {
-    
     if (Object.keys(where).length != 0) {
       if (where.key) {
         const keyProduct = Number(where.key);
@@ -30,25 +29,10 @@ module.exports = {
       const promise = cursor.toArray();
       return promise;
     }
-
-    // const cursor = productCollection.find();
-    // const promise = cursor.toArray();
-    // return promise;
-
   },
   
-  getProductByKey(kod) {
-    const found = shopDatabase.collection("product").findOne({key: Number(kod)}); 
+  getProductByKey(key) {
+    const found = shopDatabase.collection("product").findOne({key: Number(key)}); 
     return found;
-  },
-  
-  findById(id) {
-    let mongoId;
-    try {
-      mongoId = ObjectID(id);
-    } catch(err) {
-      return Promise.reject(new Error("500"));
-    }
-    return productCollection.findOne({ _id: mongoId });
-  } 
+  }
 }
