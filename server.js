@@ -1,11 +1,13 @@
 const ProductService = require("./ProductService.js");
 const queryString = require('query-string');
-const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+// const MongoClient = require('mongodb').MongoClient;
+// const ObjectID = require('mongodb').ObjectID;
 
 const ejs = require("ejs");
 const http = require('http');
-const path = require('path');
+//const path = require('path');
+const express = require('express');
+const app = express();
 const fs = require('fs');
 
 function handler(req, res) {
@@ -118,6 +120,12 @@ function serveInternalServerError(req, res, customText) {
   
 ProductService.init();
 
-const server = http.createServer(handler);
+// const server = http.createServer(handler);
+// server.listen(process.env.PORT); 
 
-server.listen(process.env.PORT); //3000 process.env.PORT
+app.get('/', serveSPA);
+app.get('/product/:product', serveSPA);
+
+app.listen(3000, function() {
+    console.log("Server started");
+  }); //3000 process.env.PORT
