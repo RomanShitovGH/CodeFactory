@@ -18,9 +18,6 @@ module.exports = {
       if (where.key) {
         const keyProduct = Number(where.key);
         return productCollection.findOne({ key: keyProduct });
-      } else if (where.price) {
-        const priceProduct = Number(where.price);
-        return productCollection.findOne({ price: priceProduct });
       } else {
         return productCollection.findOne(where);
       }
