@@ -1,8 +1,6 @@
 import React from "react";
 import Nav from "../components/Navigation.jsx";
 import { Link } from "react-router-dom";
-import { createBrowserHistory } from "history";
-const history = createBrowserHistory();
 const fetch = require("node-fetch");
 
 export default class IndexPage extends React.Component {

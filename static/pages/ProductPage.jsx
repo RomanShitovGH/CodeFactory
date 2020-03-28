@@ -12,7 +12,7 @@ export default class ProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch("/api/products?key="+this.props.match.params.product)
+    fetch("/api/product?key="+this.props.match.params.product)
       .then(function (response) {
         return response.json();
       })
@@ -20,15 +20,34 @@ export default class ProductPage extends React.Component {
         this.setState({
           product: json
         })        
-      }.bind(this))
-      .catch(function(err) {
-        //
-        }) 
+      }.bind(this))           
   }
   
-  
-  render() {
-     
+  renderProduct() {
+    if (Object.keys(this.state.product).length === 0) {
+      return <p>"Ошибка в идентификаторе товара. Ответ сервера: 500"</p>;
+    } else {
+      return (  
+        <ProductBox title={this.state.product.title}>
+          <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
+          <div className="row">
+            <div className="col-3">
+              <img className="img-fluid" src={"/"+this.state.product.img}/>
+            </div>
+            <div className="col-9">
+              <p>{this.state.product.description}</p>
+              <p>Цена: {this.state.product.price}</p>
+              <hr/>
+              <button type="button" className="btn btn-primary">Заказать</button>
+              <br/><br/>
+            </div>
+          </div>
+        </ProductBox> 
+      ) 
+    }
+  }
+
+  render() {  
      return <div className="bg-secondary">
        		    <header className="bg-primary">
                 <div className="row">
@@ -53,21 +72,7 @@ export default class ProductPage extends React.Component {
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
                       </ol>
                     </nav>
-                    <ProductBox title={this.state.product.title}>
-                      <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
-                      <div className="row">
-                        <div className="col-3">
-                          <img className="img-fluid" src={this.state.product.img}/>
-                        </div>
-                        <div className="col-9">
-                          <p>{this.state.product.description}</p>
-                          <p>Цена: {this.state.product.price}</p>
-                          <hr/>
-                          <button type="button" className="btn btn-primary">Заказать</button>
-                          <br/><br/>
-                        </div>
-                      </div>
-                    </ProductBox>
+                    { this.renderProduct() }
                   </div>
                 </div>
               </main>

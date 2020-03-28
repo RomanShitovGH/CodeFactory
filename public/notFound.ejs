@@ -22,22 +22,7 @@
       <div class="row">
         <div class="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
           <div class="card-deck">
-            <% if (products.customText) { %>
-              <h3><%= products.customText %></h3>
-            <% } else { %>
-              <% for (let i = 0; i < products.length; i++) { %>
-                <% let product = products[i]; %> 
-                <div class="card">
-                  <img class="card-img-top" src="<%= product.img %>" alt="Card image cap"> 
-                  <div class="card-body">
-                    <h5 class="card-title"><%= product.title %></h5>
-                    <p class="card-text"><%= product.description %></p>
-                    <p class="card-text">Цена: <%= product.price %></p>
-                    <a href="/product/<%= product.key %>-<%= product.slug %>" class="btn btn-primary">Купить</a>
-                  </div>
-                </div>
-              <% } %>
-            <% } %>  
+            <%= product.customText %> 
           </div>
         </div>
       </div>
