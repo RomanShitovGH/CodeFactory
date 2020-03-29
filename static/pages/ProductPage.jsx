@@ -7,44 +7,70 @@ export default class ProductPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      product: []  
+      product: [],
+      status: "idle"  
     }
   }
   
   componentDidMount() {
     fetch("/api/product?key="+this.props.match.params.product)
-      .then(function (response) {
-        return response.json();
+      .then(response => { 
+        return response.json();  
       })
-      .then(function (json) {
+      .then(json => {
         this.setState({
-          product: json
-        })        
-      }.bind(this))           
+          product: json,
+          status: "ready"  
+        })
+      })
+      .catch(error => {
+        this.setState({
+          status: "error"
+        })
+      })           
   }
   
   renderProduct() {
-    if (Object.keys(this.state.product).length === 0) {
-      return <p>"Ошибка в идентификаторе товара. Ответ сервера: 500"</p>;
+    if (this.state.status === "error") {
+      return false
     } else {
-      return (  
-        <ProductBox title={this.state.product.title}>
-          <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
-          <div className="row">
-            <div className="col-3">
-              <img className="img-fluid" src={"/"+this.state.product.img}/>
+        return (  
+          <ProductBox title={this.state.product.title}>
+            <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
+            <div className="row">
+              <div className="col-3">
+                <img className="img-fluid" src={"/"+this.state.product.img}/>
+              </div>
+              <div className="col-9">
+                <p>{this.state.product.description}</p>
+                <p>Цена: {this.state.product.price}</p>
+                <hr/>
+                <button type="button" className="btn btn-primary">Заказать</button>
+                <br/><br/>
+              </div>
             </div>
-            <div className="col-9">
-              <p>{this.state.product.description}</p>
-              <p>Цена: {this.state.product.price}</p>
-              <hr/>
-              <button type="button" className="btn btn-primary">Заказать</button>
-              <br/><br/>
-            </div>
-          </div>
-        </ProductBox> 
-      ) 
+          </ProductBox> 
+        )
+      } 
     }
+
+  renderStatus() {
+    switch (this.state.status) {
+      case "ready":
+        return ( <div className="alert alert-primary" role="alert">
+                 Данные загружены
+               </div> );
+      case "error":
+        return ( <div className="alert alert-danger" role="alert">
+                 Ошибка при получении данных. Код 500
+               </div> );
+      case "pending":
+        return ( <div className="alert alert-warning" role="alert">
+                 Загружаю данные
+               </div>);
+      default:
+        return false; 
+    }     
   }
 
   render() {  
@@ -72,6 +98,7 @@ export default class ProductPage extends React.Component {
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
                       </ol>
                     </nav>
+                    { this.renderStatus() }
                     { this.renderProduct() }
                   </div>
                 </div>
