@@ -20,8 +20,7 @@ export default class IndexPage extends React.Component {
       .then(function (response) {
         return response.json();
       })
-      .then(function (json) {
-        
+      .then(function (json) {  
         this.setState({
           products: json,
           status: "ready"
