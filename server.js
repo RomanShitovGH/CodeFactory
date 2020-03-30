@@ -67,7 +67,8 @@ ProductService.init();
 app.get('/', serveSPA);
 app.get('/product/:product', serveSPA);
 app.get('/panel', serveSPA);
-
+app.get('/panel/product', serveSPA);
+app.get('/panel/product/:id', serveSPA);
 
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);

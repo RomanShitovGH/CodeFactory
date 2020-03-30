@@ -54,10 +54,11 @@ export default class PanelProductsPage extends React.Component {
 
   renderProducts() {
     return this.state.products.map(product => {
-      const linkProduct = "/product/" + product.key;
+      const linkProduct = "/panel/product/" + product.key;
+      const imgProduct = "/" + product.img;
       return (
         <div className="card" key={product.key} slug={product.key}>
-          <img className="card-img-top" src={product.img} alt="Card image cap" />
+          <img className="card-img-top" src={imgProduct} alt="Card image cap" />
           <div className="card-body">
             <h5 className="card-title">{product.title}</h5>
             <p className="card-text">{product.description}</p>
