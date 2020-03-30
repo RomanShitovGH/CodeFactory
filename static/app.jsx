@@ -2,20 +2,24 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { Router, Route, Switch } from "react-router-dom";
-import Page1 from "./pages/IndexPage.jsx";
-import Page2 from "./pages/ProductPage.jsx";
+import IndexPage from "./pages/IndexPage.jsx";
+import ProductPage from "./pages/ProductPage.jsx";
+import PanelPage from "./pages/PanelPage.jsx";
+import PanelProductsPage from "./pages/PanelProductsPage.jsx";
+import PanelProductPage from "./pages/PanelProductPage.jsx";
 
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
-
-import IndexPage from "./pages/IndexPage.jsx";
 
 class App extends React.Component {
   render() {
     return  <Router history={ history }>
               <Switch>
-                <Route exact path="/" component={ Page1 } />
-                <Route exact path="/product/:product" component={ Page2 } />
+                <Route exact path="/" component={ IndexPage } />
+                <Route exact path="/product/:product" component={ ProductPage } />
+                <Route exact path="/panel" component={ PanelPage } />
+                <Route exact path="/panel/product" component={ PanelProductsPage } />
+                <Route exact path="/panel/product/:id" component={ PanelProductPage } />
               </Switch>
             </Router>;
   }
