@@ -54,10 +54,10 @@ export default class PanelProductsPage extends React.Component {
 
   renderProducts() {
     return this.state.products.map(product => {
-      const linkProduct = "/panel/product/" + product.key;
+      const linkProduct = "/panel/product/" + product._id;
       const imgProduct = "/" + product.img;
       return (
-        <div className="card" key={product.key} slug={product.key}>
+        <div className="card" key={product.key} slug={product.slug} id={product._id}>
           <img className="card-img-top" src={imgProduct} alt="Card image cap" />
           <div className="card-body">
             <h5 className="card-title">{product.title}</h5>
@@ -72,10 +72,10 @@ export default class PanelProductsPage extends React.Component {
       
   render() {
      return  <div className="bg-secondary">
-                <header className="bg-primary">
+                <header className="bg-success">
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
-                      <nav className="navbar navbar-expand navbar-dark bg-primary">
+                      <nav className="navbar navbar-expand navbar-dark bg-success">
                         <div className="collapse navbar-collapse">
                           <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
                         </div>

@@ -15,6 +15,7 @@ function serveSPA(req, res) {
 function serveProducts(req, res) { 
     ProductService.getProducts()
     .then( products => {
+        
         if (products) {
             res.json(products); 
         }
@@ -25,17 +26,38 @@ function serveProducts(req, res) {
 }
 
 function serveOneProduct(req, res) { 
-    ProductService.getProductByKeySlug(req.query)
-    .then( (product) => {
-        if (product) {
-            res.json(product); 
-        } else {
-            serveInternalServerError(req, res);
-        }
-    })
-    .catch( err => {
-        serveInternalServerError(req, res, err.message);
-    })   
+    if (req.query.key) {
+        ProductService.getProductByKey(req.query)
+            .then( (product) => {
+                if (product) {
+                    res.json(product);
+                }
+            })
+            .catch( err => {
+                serveInternalServerError(req, res, err.message);
+            })
+    } else if (req.query.slug) {
+        ProductService.getProductBySlug(req.query)
+            .then( (product) => {
+                if (product) {
+                    res.json(product); 
+                }
+            })
+            .catch( err => {
+                serveInternalServerError(req, res, err.message);
+            })  
+    } else if (req.query.id) {
+        ProductService.getProductById(req.query)
+        .then( (product) => {
+            if (product) {
+                res.json(product); 
+            }
+        })
+        .catch( err => {
+            serveInternalServerError(req, res, err.message);
+        })
+    }
+       
 }
 
 function serveNotFound(req, res) {
@@ -74,7 +96,6 @@ app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 
 app.use(staticMiddleware);
-
 app.use(serveNotFound);
 
 app.listen(3000); //3000 process.env.PORT

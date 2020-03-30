@@ -6,10 +6,10 @@ export default class PanelPage extends React.Component {
      
   render() {
      return  <div className="bg-secondary">
-                <header className="bg-primary">
+                <header className="bg-success">
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
-                      <nav className="navbar navbar-expand navbar-dark bg-primary">
+                      <nav className="navbar navbar-expand navbar-dark bg-success">
                         <div className="collapse navbar-collapse">
                           <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
                         </div>

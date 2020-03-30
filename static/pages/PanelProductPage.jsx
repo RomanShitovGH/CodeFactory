@@ -13,7 +13,7 @@ export default class PanelProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch("/api/product?key="+this.props.match.params.product)
+    fetch("/api/product?id="+this.props.match.params.id)
       .then(response => { 
         return response.json();  
       })
@@ -22,6 +22,7 @@ export default class PanelProductPage extends React.Component {
           product: json,
           status: "ready"  
         })
+        
       })
       .catch(error => {
         this.setState({
@@ -75,10 +76,10 @@ export default class PanelProductPage extends React.Component {
 
   render() {  
      return <div className="bg-secondary">
-       		  <header className="bg-primary">
+       		  <header className="bg-success">
                 <div className="row">
                   <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
-                    <nav className="navbar navbar-expand navbar-dark bg-primary">
+                    <nav className="navbar navbar-expand navbar-dark bg-success">
                       <div className="collapse navbar-collapse">
                         <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
                       </div>
@@ -92,7 +93,7 @@ export default class PanelProductPage extends React.Component {
                     <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                          <Link to="/">Каталог</Link>
+                          <Link to="/panel/product">Каталог</Link>
                         </li>
                         <li className="breadcrumb-item"><a href="#">Вентиляция</a></li>
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
