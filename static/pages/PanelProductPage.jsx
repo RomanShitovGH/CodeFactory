@@ -31,6 +31,11 @@ export default class PanelProductPage extends React.Component {
       })           
   }
   
+  onChange (event) {
+    this.state.product.title = event.target.value;
+    this.forceUpdate();
+  }
+
   renderProduct() {
     if (this.state.status === "error") {
       return false
@@ -43,6 +48,16 @@ export default class PanelProductPage extends React.Component {
                 <img className="img-fluid" src={"/"+this.state.product.img}/>
               </div>
               <div className="col-9">
+                
+                <form>
+                  <div class="form-group">
+                    <label>Название товара</label>
+                    <input class="form-control" type="text" value={ this.state.product.title } 
+                      onChange={ this.onChange.bind(this) }/>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
                 <p>{this.state.product.description}</p>
                 <p>Цена: {this.state.product.price}</p>
                 <hr/>

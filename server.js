@@ -98,4 +98,4 @@ app.get('/api/product?:key_slug', serveOneProduct);
 app.use(staticMiddleware);
 app.use(serveNotFound);
 
-app.listen(process.env.PORT); //3000 process.env.PORT
+app.listen(3000); //3000 process.env.PORT
