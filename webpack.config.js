@@ -34,6 +34,14 @@ module.exports = {
             }
           }
         ]
-    }
+    },
+    devServer: {
+      //contentBase: __dirname + "/public/",
+      //overlay: true,
+      // inline: true,
+      // port: 3000,
+      
+    },
+
 }
 

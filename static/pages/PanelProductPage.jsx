@@ -7,7 +7,7 @@ export default class PanelProductPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      product: [],
+      product: {},
       status: "idle"  
     }
   }
@@ -32,8 +32,9 @@ export default class PanelProductPage extends React.Component {
   }
   
   onChange (event) {
-    this.state.product.title = event.target.value;
-    this.forceUpdate();
+    let prod = this.state.product;
+    prod.title = event.target.value;
+    this.setState({ prod });
   }
 
   renderProduct() {
@@ -64,9 +65,9 @@ export default class PanelProductPage extends React.Component {
   renderForm() {
     return (
       <form>
-        <div class="form-group">
+        <div className="form-group">
           <label>Редактирование названия товара</label>
-          <input class="form-control" type="text" value={ this.state.product.title } 
+          <input className="form-control" type="text" value={ this.state.product.title } 
             onChange={ this.onChange.bind(this) }/>
         </div>
       </form>
