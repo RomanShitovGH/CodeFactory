@@ -32,9 +32,12 @@ export default class PanelProductPage extends React.Component {
   }
   
   onChange (event) {
+    let name = event.target.name;
     let prod = this.state.product;
-    prod.title = event.target.value;
+    prod[name] = event.target.value;
     this.setState({ prod });
+    // this.state.product.title = event.target.value;
+    // this.forceUpdate();
   }
 
   renderProduct() {
@@ -49,12 +52,10 @@ export default class PanelProductPage extends React.Component {
                 <img className="img-fluid" src={"/"+this.state.product.img}/>
               </div>
               <div className="col-9">
-                { this.state.product && this.renderForm() }
                 <p>{this.state.product.description}</p>
-                <p>Цена: {this.state.product.price}</p>
+                <p>Цена: {this.state.product.price}</p>y
                 <hr/>
-                <button type="button" className="btn btn-primary">Заказать</button>
-                <br/><br/>
+                { this.state.product && this.renderForm() }
               </div>
             </div>
           </ProductBox> 
@@ -65,11 +66,35 @@ export default class PanelProductPage extends React.Component {
   renderForm() {
     return (
       <form>
+        <label>Редактирование товара: </label>
         <div className="form-group">
-          <label>Редактирование названия товара</label>
-          <input className="form-control" type="text" value={ this.state.product.title } 
+          <label>Название товара: </label>
+          <input  
+            name="title"             
+            type="text" 
+            value={ this.state.product.title } 
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Описание товара: </label>
+          <textarea  
+            name="description"             
+            type="text"
+            value={ this.state.product.description }  
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Ключ: </label>
+          <input  
+            name="key"             
+            type="text" value={ this.state.product.key } 
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Слаг: </label>
+          <input  
+            name="slug"             
+            type="text" value={ this.state.product.slug } 
             onChange={ this.onChange.bind(this) }/>
         </div>
+        
       </form>
     )
   }  
