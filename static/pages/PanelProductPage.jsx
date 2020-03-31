@@ -13,7 +13,7 @@ export default class PanelProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch("/api/product?id="+this.props.match.params.id)
+    fetch("/api/product?id=" + this.props.match.params.id)
       .then(response => { 
         return response.json();  
       })
@@ -31,13 +31,26 @@ export default class PanelProductPage extends React.Component {
       })           
   }
   
+  onSave () {
+    event.preventDefault();
+    fetch(`/api/product/${this.props.match.params.id}`, {
+      method: "put",
+      body: JSON.stringify(this.state.product),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => { 
+      console.log("Запрос отправлен");
+      //return response.json();  
+    })
+  }
+
   onChange (event) {
-    let name = event.target.name;
-    let prod = this.state.product;
+    const name = event.target.name;
+    const prod = this.state.product;
     prod[name] = event.target.value;
     this.setState({ prod });
-    // this.state.product.title = event.target.value;
-    // this.forceUpdate();
   }
 
   renderProduct() {
@@ -94,7 +107,11 @@ export default class PanelProductPage extends React.Component {
             type="text" value={ this.state.product.slug } 
             onChange={ this.onChange.bind(this) }/>
         </div>
-        
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          onClick={ this.onSave.bind(this) }>Сохранить
+        </button>
       </form>
     )
   }  
