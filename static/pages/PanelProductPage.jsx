@@ -48,16 +48,7 @@ export default class PanelProductPage extends React.Component {
                 <img className="img-fluid" src={"/"+this.state.product.img}/>
               </div>
               <div className="col-9">
-                
-                <form>
-                  <div class="form-group">
-                    <label>Название товара</label>
-                    <input class="form-control" type="text" value={ this.state.product.title } 
-                      onChange={ this.onChange.bind(this) }/>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                
+                { this.state.product && this.renderForm() }
                 <p>{this.state.product.description}</p>
                 <p>Цена: {this.state.product.price}</p>
                 <hr/>
@@ -69,6 +60,18 @@ export default class PanelProductPage extends React.Component {
         )
       } 
     }
+  
+  renderForm() {
+    return (
+      <form>
+        <div class="form-group">
+          <label>Редактирование названия товара</label>
+          <input class="form-control" type="text" value={ this.state.product.title } 
+            onChange={ this.onChange.bind(this) }/>
+        </div>
+      </form>
+    )
+  }  
 
   renderStatus() {
     switch (this.state.status) {
