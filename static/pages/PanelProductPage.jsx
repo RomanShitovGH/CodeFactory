@@ -42,6 +42,17 @@ export default class PanelProductPage extends React.Component {
     // this.forceUpdate();
   }
 
+  onSave (event) {
+    event.preventDefault();
+    fetch(`/api/product/${this.props.match.params.id}`, {
+      method: "put",
+      body: JSON.stringify(this.state.product),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  }
+
   renderProduct() {
     if (this.state.status === "error") {
       return false
@@ -96,7 +107,7 @@ export default class PanelProductPage extends React.Component {
             type="text" value={ this.state.product.slug } 
             onChange={ this.onChange.bind(this) }/>
         </div>
-        
+        <button type="button" className="btn btn-primary" onClick={ this.onSave.bind(this) }>Сохранить</button>
       </form>
     )
   }  

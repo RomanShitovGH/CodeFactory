@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const staticMiddleware = express.static("public");
+const bodyParser = require('body-parser');
+
 
 function serveSPA(req, res) {
     const spa = fs.readFileSync("public/spa.html");
@@ -94,6 +96,19 @@ app.get('/panel/product/:id', serveSPA);
 
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
+
+app.use(bodyParser.json()); 
+
+app.put("/api/product/:id", function(req, res) {
+  ProductService.updateProduct(req.params.id, req.body)
+    .then(result => {
+        res.json(result);
+    })
+    .catch( err => {
+        serveInternalServerError(req, res, err.message);
+    });  
+});
+
 
 app.use(staticMiddleware);
 app.use(serveNotFound);
