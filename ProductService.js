@@ -54,21 +54,32 @@ module.exports = {
     } 
   },
 
-  async updateProduct(id, patch) {
-    return await new Promise((resolve, reject) => {
-      const result = productCollection.update(
-                  { _id: ObjectID(id)},
-                  {
-                    $set: omit(patch, ['_id'])
-                  }
-                )
-      if (result.result.ok === 1) {
-        resolve (getProductById(id));
-      } else {
-        reject (Promise.reject(new Error("500")));
-    }            
-  })
+  updateProduct(id, patch) {
+    return new Promise (
+      async resolve => {
+        await productCollection.updateOne(
+            { _id: ObjectID(id) },
+            { $set: omit(patch, ['_id']) }
+          )
+        resolve (productCollection.findOne({ _id: ObjectID(id) }));  
+      },
+      reject => {
+        reject (new Error("500"));
+      }
+    )
+      
+    // const product = productCollection.updateOne(
+    //             { _id: ObjectID(id)},
+    //             {
+    //               $set: omit(patch, ['_id'])
+    //             }
+    //           )
+    // const result = await product;          
+    // if (result.result.ok === 1) {
+    //   return (productCollection.findOne({ _id: ObjectID(id) }));
+    // } else {
+    //   return (Promise.reject(new Error("500")));
+    // }
   }
-
 
 }

@@ -15,7 +15,7 @@ export default class PanelProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch("/api/product?id="+this.props.match.params.id)
+    fetch(`/api/product?id=${this.props.match.params.id}`)
       .then(response => { 
         return response.json();  
       })
@@ -34,12 +34,10 @@ export default class PanelProductPage extends React.Component {
   }
   
   onChange (event) {
-    let name = event.target.name;
-    let prod = this.state.product;
+    const name = event.target.name;
+    const prod = this.state.product;
     prod[name] = event.target.value;
-    this.setState({ prod });
-    // this.state.product.title = event.target.value;
-    // this.forceUpdate();
+    this.setState({ product: prod });
   }
 
   onSave (event) {
@@ -54,25 +52,23 @@ export default class PanelProductPage extends React.Component {
   }
 
   renderProduct() {
-    if (this.state.status === "error") {
-      return false
-    } else {
-        return (  
-          <ProductBox title={this.state.product.title}>
-            <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
-            <div className="row">
-              <div className="col-3">
-                <img className="img-fluid" src={"/"+this.state.product.img}/>
-              </div>
-              <div className="col-9">
-                <p>{this.state.product.description}</p>
-                <p>Цена: {this.state.product.price}</p>y
-                <hr/>
-                { this.state.product && this.renderForm() }
-              </div>
+    if (this.state.status !== "error") {
+      return (  
+        <ProductBox title={this.state.product.title}>
+          <Nav tabs={[ "Описание", "Характеристики", "Отзывы" ]} className="nav nav-tabs"/>
+          <div className="row">
+            <div className="col-3">
+              <img className="img-fluid" src={"/"+this.state.product.img}/>
             </div>
-          </ProductBox> 
-        )
+            <div className="col-9">
+              <p>{this.state.product.description}</p>
+              <p>Цена: {this.state.product.price}</p>
+              <hr/>
+              { this.renderForm() }
+            </div>
+          </div>
+        </ProductBox> 
+      )
       } 
     }
   
@@ -147,7 +143,7 @@ export default class PanelProductPage extends React.Component {
                       </ol>
                     </nav>
                     { this.renderStatus() }
-                    { this.renderProduct() }
+                    { this.state.product && this.renderProduct() }
                   </div>
                 </div>
               </main>
