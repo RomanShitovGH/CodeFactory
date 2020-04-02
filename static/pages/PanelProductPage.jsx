@@ -49,6 +49,14 @@ export default class PanelProductPage extends React.Component {
         "Content-Type": "application/json"
       }
     })
+    .then(response => { 
+      return response.json();  
+    })
+    .then(json => {
+      this.setState({
+        product: json  
+    })
+    })
   }
 
   renderProduct() {

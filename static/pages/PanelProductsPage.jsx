@@ -22,10 +22,16 @@ export default class PanelProductsPage extends React.Component {
         return response.json();
       })
       .then(function (json) {  
-        this.setState({
-          products: json,
-          status: "ready"
-        })        
+        if (Object.keys(json).length != 0) {
+          this.setState({
+            products: json,
+            status: "ready"
+          })
+        } else {
+          this.setState({
+            status: "error"
+          })
+        }        
       }.bind(this))
       .catch(function(err) {
         this.setState({
@@ -70,7 +76,7 @@ export default class PanelProductsPage extends React.Component {
       );
     })
   }
-      
+
   render() {
      return  <div className="bg-secondary">
                 <Header color="bg-success"/>

@@ -14,8 +14,8 @@ module.exports = {
         })
   },
   
-  getProducts() {
-    const cursor = productCollection.find();
+  getProducts(where) {
+    const cursor = productCollection.find(where);
     const promise = cursor.toArray();
     return promise;
   },
@@ -67,19 +67,7 @@ module.exports = {
         reject (new Error("500"));
       }
     )
-      
-    // const product = productCollection.updateOne(
-    //             { _id: ObjectID(id)},
-    //             {
-    //               $set: omit(patch, ['_id'])
-    //             }
-    //           )
-    // const result = await product;          
-    // if (result.result.ok === 1) {
-    //   return (productCollection.findOne({ _id: ObjectID(id) }));
-    // } else {
-    //   return (Promise.reject(new Error("500")));
-    // }
+    
   }
 
 }

@@ -17,13 +17,14 @@ function serveSPA(req, res) {
 function serveProducts(req, res) { 
     ProductService.getProducts()
     .then( products => {
-        
         if (products) {
             res.json(products); 
+        } else {
+            res.json({});    
         }
     })
     .catch( err => {
-        serveInternalServerError(req, res, err.message);
+        serveInternalError(req, res);
     })    
 }
 
@@ -36,7 +37,7 @@ function serveOneProduct(req, res) {
                 }
             })
             .catch( err => {
-                serveInternalServerError(req, res, err.message);
+                serveInternalError(req, res);
             })
     } else if (req.query.slug) {
         ProductService.getProductBySlug(req.query)
@@ -46,7 +47,7 @@ function serveOneProduct(req, res) {
                 }
             })
             .catch( err => {
-                serveInternalServerError(req, res, err.message);
+                serveInternalError(req, res);
             })  
     } else if (req.query.id) {
         ProductService.getProductById(req.query)
@@ -56,7 +57,7 @@ function serveOneProduct(req, res) {
             }
         })
         .catch( err => {
-            serveInternalServerError(req, res, err.message);
+            serveInternalError(req, res);
         })
     }
        
@@ -74,7 +75,7 @@ function serveNotFound(req, res) {
     res.end();
 }
 
-function serveInternalServerError(req, res) {
+function serveInternalError(req, res) {
     let scope;
     const file = fs.readFileSync("public/notFound.ejs").toString();;
     const template = ejs.compile(file);
@@ -105,7 +106,7 @@ app.put("/api/product/:id", function(req, res) {
         res.json(result);
     })
     .catch( err => {
-        serveInternalServerError(req, res, err.message);
+        serveInternalError(req, res, err.message);
     });  
 });
 
