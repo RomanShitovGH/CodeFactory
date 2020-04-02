@@ -15,7 +15,7 @@ function serveSPA(req, res) {
 }
 
 function serveProducts(req, res) { 
-    ProductService.getProducts()
+    ProductService.getProducts(req.query)
     .then( products => {
         if (products) {
             res.json(products); 
