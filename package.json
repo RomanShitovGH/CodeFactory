@@ -6,15 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build && node server.js",
-    "build": "cross-env NODE_ENV=development webpack --config ./webpack.js"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./webpack.config.js --hot --host 0.0.0.0",
+    "build": "cross-env NODE_ENV=development webpack --config ./webpack.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "copy-webpack-plugin": "^5.1.1",
     "ejs": "^3.0.1",
+    "express": "^4.17.1",
     "history": "^4.10.1",
     "mongodb": "^3.5.4",
+    "node-fetch": "^2.6.0",
+    "query-string": "^6.11.1",
     "react-router-dom": "^5.1.2",
     "webpack-cli": "^3.3.11"
   },
@@ -30,6 +34,7 @@
     "cross-env": "^7.0.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "webpack": "^4.42.0"
+    "webpack": "^4.42.0",
+    "webpack-dev-server": "^3.10.3"
   }
 }

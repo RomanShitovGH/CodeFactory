@@ -7,3 +7,15 @@ sudo apt install webpack
 // старт при компиляции
 "build": "cross-env NODE_ENV=development webpack --config ./webpack.js" - с компа
          "./node_modules/.bin/webpack --config ./webpack.js" - с Cloud9
+         
+
+git checkout 7.6 - переключаемся
+git add .        - Добавляем все измененные файлы к переносу
+git status       - проверка того что будем переносить
+git commit -m "задание 7.6"  - коммитим с комментарием
+коммит проходит но может вывести просьбу настроить ГИТ
+git config --global user.name "RomanShitovGH"
+git config --global user.email romanshitov@yandex.ru
+
+git commit -m "задание 7.6"
+git push origin 7.6
