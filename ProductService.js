@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-var omit = require('lodash.omit');
+const omit = require('lodash.omit');
 
 let shopDatabase;
 let productCollection;
