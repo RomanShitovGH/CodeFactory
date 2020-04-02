@@ -1,8 +1,8 @@
-sudo apt install mongodb-server-core
+﻿sudo apt install mongodb-server-core
 sudo apt install mongodb-clients
 echo 'mongod --bind_ip=$IP --dbpath=data --nojournal' > mongod
 chmod a+x mongod
-sudo apt install webpack
+sudo apt install webpack 
 
 // старт при компиляции
 "build": "cross-env NODE_ENV=development webpack --config ./webpack.js" - с компа
