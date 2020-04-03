@@ -67,7 +67,21 @@ module.exports = {
         reject (new Error("500"));
       }
     )
-    
+  },
+
+  addProduct(patch) {
+    return new Promise (
+      async resolve => {
+        await productCollection.insert(
+            { _id: ObjectID(id) },
+            { $set: omit(patch, ['_id']) }
+          )
+        resolve (productCollection.findOne({ _id: ObjectID(id) }));  
+      },
+      reject => {
+        reject (new Error("500"));
+      }
+    )
   }
 
 }

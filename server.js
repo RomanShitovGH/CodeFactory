@@ -110,6 +110,15 @@ app.put("/api/product/:id", function(req, res) {
     });  
 });
 
+app.post("/api/product", function(req, res) {
+    ProductService.addProduct(req.body)
+      .then(result => {
+          res.json(result);
+      })
+      .catch( err => {
+          serveInternalError(req, res, err.message);
+      });  
+  });
 
 app.use(staticMiddleware);
 app.use(serveNotFound);
