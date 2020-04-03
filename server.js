@@ -113,7 +113,7 @@ app.put("/api/product/:id", function(req, res) {
 app.post("/api/product", function(req, res) {
     ProductService.addProduct(req.body)
       .then(result => {
-          res.json(result);
+          res.json(result.ops[0]);
       })
       .catch( err => {
           serveInternalError(req, res, err.message);

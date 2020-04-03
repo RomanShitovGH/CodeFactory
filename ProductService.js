@@ -72,11 +72,7 @@ module.exports = {
   addProduct(patch) {
     return new Promise (
       async resolve => {
-        await productCollection.insert(
-            { _id: ObjectID(id) },
-            { $set: omit(patch, ['_id']) }
-          )
-        resolve (productCollection.findOne({ _id: ObjectID(id) }));  
+        resolve (await productCollection.insertOne(patch));  
       },
       reject => {
         reject (new Error("500"));

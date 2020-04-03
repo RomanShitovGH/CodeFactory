@@ -9,14 +9,14 @@ export default class PanelProductsPage extends React.Component {
     super(props)
     this.state = {
       products: [],
-      newProduct: [{
-        "title" : "", 
-        "img" : "product1.png", 
-        "description" : "", 
-        "price" : 0, 
-        "key" : 0, 
-        "slug" : ""
-      }],
+      newProduct: {
+        title : "", 
+        img : "product1.png", 
+        description : "", 
+        price : 0, 
+        key : 0, 
+        slug : ""
+      },
       status: "idle"  
     }
   }
@@ -86,7 +86,6 @@ export default class PanelProductsPage extends React.Component {
   }
 
   renderNewProduct() {
-    console.log("New Product - ");
     return (
       <form>
         <label>Добавить новый товар: </label>
@@ -95,29 +94,47 @@ export default class PanelProductsPage extends React.Component {
           <input  
             name="title"             
             type="text" 
-            value={ this.state.newProduct.title }/>
+            value={ this.state.newProduct.title }
+            onChange={ this.onChange.bind(this) }/>
           <br/>
           <label>Описание: </label>
           <textarea  
             name="description"             
             type="text"
-            value={ this.state.newProduct.description }/>
+            value={ this.state.newProduct.description }
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Цена: </label>
+          <textarea  
+            name="price"             
+            type="text"
+            value={ this.state.newProduct.price }
+            onChange={ this.onChange.bind(this) }/>
           <br/>
           <label>Ключ: </label>
           <input  
             name="key"             
             type="text" 
-            value={ this.state.newProduct.key }/>
+            value={ this.state.newProduct.key }
+            onChange={ this.onChange.bind(this) }/>
           <br/>
           <label>Слаг: </label>
           <input  
             name="slug"             
             type="text" 
-            value={ this.state.newProduct.slug }/>
+            value={ this.state.newProduct.slug }
+            onChange={ this.onChange.bind(this) }/>
         </div>
         <button type="button" className="btn btn-primary" onClick={ this.onAdd.bind(this) }>Добавить</button>
       </form>
     ) 
+  }
+
+  onChange (event) {
+    const name = event.target.name;
+    const prod = this.state.newProduct;
+    prod[name] = event.target.value;
+    this.setState({ newProduct: prod });
   }
 
   onAdd (event) {
@@ -134,8 +151,17 @@ export default class PanelProductsPage extends React.Component {
     })
     .then(json => {
       this.setState({
-        product: json  
-    })
+        products: [ ...this.state.products, json ],  
+        newProduct: {
+          title : "", 
+          img : "product1.png", 
+          description : "", 
+          price : 0, 
+          key : 0, 
+          slug : ""
+        }
+      })
+      
     })
   }
 
