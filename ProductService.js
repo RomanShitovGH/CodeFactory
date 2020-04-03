@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const omit = require('lodash.omit');
 
 let shopDatabase;
 let productCollection;
@@ -13,8 +14,8 @@ module.exports = {
         })
   },
   
-  getProducts() {
-    const cursor = productCollection.find();
+  getProducts(where) {
+    const cursor = productCollection.find(where);
     const promise = cursor.toArray();
     return promise;
   },
@@ -51,5 +52,22 @@ module.exports = {
       }  
       
     } 
+  },
+
+  updateProduct(id, patch) {
+    return new Promise (
+      async resolve => {
+        await productCollection.updateOne(
+            { _id: ObjectID(id) },
+            { $set: omit(patch, ['_id']) }
+          )
+        resolve (productCollection.findOne({ _id: ObjectID(id) }));  
+      },
+      reject => {
+        reject (new Error("500"));
+      }
+    )
+    
   }
+
 }

@@ -1,5 +1,6 @@
 import React from "react";
-import Nav from "../components/Navigation.jsx";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
 const fetch = require("node-fetch");
 
@@ -21,10 +22,16 @@ export default class PanelProductsPage extends React.Component {
         return response.json();
       })
       .then(function (json) {  
-        this.setState({
-          products: json,
-          status: "ready"
-        })        
+        if (Object.keys(json).length != 0) {
+          this.setState({
+            products: json,
+            status: "ready"
+          })
+        } else {
+          this.setState({
+            status: "error"
+          })
+        }        
       }.bind(this))
       .catch(function(err) {
         this.setState({
@@ -69,20 +76,10 @@ export default class PanelProductsPage extends React.Component {
       );
     })
   }
-      
+
   render() {
      return  <div className="bg-secondary">
-                <header className="bg-success">
-                  <div className="row">
-                    <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1">
-                      <nav className="navbar navbar-expand navbar-dark bg-success">
-                        <div className="collapse navbar-collapse">
-                          <Nav tabs={[ "Каталог", "Доставка", "Гарантии", "Контакты" ]} className="navbar-nav"/>  
-                        </div>
-                      </nav>
-                    </div>
-                  </div>
-                </header>
+                <Header color="bg-success"/>
                 <main>
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
@@ -97,13 +94,7 @@ export default class PanelProductsPage extends React.Component {
                     </div>
                   </div>
                 </main>
-                <footer className="bg-secondary">
-                    <div className="row">
-                        <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 bg-secondary">
-                            &copy; Codery.camp, 2020
-                        </div>
-                    </div>
-                </footer>
+                <Footer/>
             </div>
   }
 }

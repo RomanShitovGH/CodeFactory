@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const staticMiddleware = express.static("public");
+const bodyParser = require('body-parser');
+
 
 function serveSPA(req, res) {
     const spa = fs.readFileSync("public/spa.html");
@@ -13,15 +15,16 @@ function serveSPA(req, res) {
 }
 
 function serveProducts(req, res) { 
-    ProductService.getProducts()
+    ProductService.getProducts(req.query)
     .then( products => {
-        
         if (products) {
             res.json(products); 
+        } else {
+            res.json({});    
         }
     })
     .catch( err => {
-        serveInternalServerError(req, res, err.message);
+        serveInternalError(req, res);
     })    
 }
 
@@ -34,7 +37,7 @@ function serveOneProduct(req, res) {
                 }
             })
             .catch( err => {
-                serveInternalServerError(req, res, err.message);
+                serveInternalError(req, res);
             })
     } else if (req.query.slug) {
         ProductService.getProductBySlug(req.query)
@@ -44,7 +47,7 @@ function serveOneProduct(req, res) {
                 }
             })
             .catch( err => {
-                serveInternalServerError(req, res, err.message);
+                serveInternalError(req, res);
             })  
     } else if (req.query.id) {
         ProductService.getProductById(req.query)
@@ -54,7 +57,7 @@ function serveOneProduct(req, res) {
             }
         })
         .catch( err => {
-            serveInternalServerError(req, res, err.message);
+            serveInternalError(req, res);
         })
     }
        
@@ -72,7 +75,7 @@ function serveNotFound(req, res) {
     res.end();
 }
 
-function serveInternalServerError(req, res) {
+function serveInternalError(req, res) {
     let scope;
     const file = fs.readFileSync("public/notFound.ejs").toString();;
     const template = ejs.compile(file);
@@ -94,6 +97,19 @@ app.get('/panel/product/:id', serveSPA);
 
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
+
+app.use(bodyParser.json()); 
+
+app.put("/api/product/:id", function(req, res) {
+  ProductService.updateProduct(req.params.id, req.body)
+    .then(result => {
+        res.json(result);
+    })
+    .catch( err => {
+        serveInternalError(req, res, err.message);
+    });  
+});
+
 
 app.use(staticMiddleware);
 app.use(serveNotFound);
