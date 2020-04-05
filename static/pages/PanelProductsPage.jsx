@@ -9,6 +9,14 @@ export default class PanelProductsPage extends React.Component {
     super(props)
     this.state = {
       products: [],
+      newProduct: {
+        title : "", 
+        img : "product1.png", 
+        description : "", 
+        price : 0, 
+        key : 0, 
+        slug : ""
+      },
       status: "idle"  
     }
   }
@@ -77,13 +85,94 @@ export default class PanelProductsPage extends React.Component {
     })
   }
 
+  renderNewProduct() {
+    return (
+      <form>
+        <label>Добавить новый товар: </label>
+        <div className="form-group">
+          <label>Название: </label>
+          <input  
+            name="title"             
+            type="text" 
+            value={ this.state.newProduct.title }
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Описание: </label>
+          <textarea  
+            name="description"             
+            type="text"
+            value={ this.state.newProduct.description }
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Цена: </label>
+          <textarea  
+            name="price"             
+            type="text"
+            value={ this.state.newProduct.price }
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Ключ: </label>
+          <input  
+            name="key"             
+            type="text" 
+            value={ this.state.newProduct.key }
+            onChange={ this.onChange.bind(this) }/>
+          <br/>
+          <label>Слаг: </label>
+          <input  
+            name="slug"             
+            type="text" 
+            value={ this.state.newProduct.slug }
+            onChange={ this.onChange.bind(this) }/>
+        </div>
+        <button type="button" className="btn btn-primary" onClick={ this.onAdd.bind(this) }>Добавить</button>
+      </form>
+    ) 
+  }
+
+  onChange (event) {
+    const name = event.target.name;
+    const prod = this.state.newProduct;
+    prod[name] = event.target.value;
+    this.setState({ newProduct: prod });
+  }
+
+  onAdd (event) {
+    event.preventDefault();
+    fetch(`/api/product`, {
+      method: "post",
+      body: JSON.stringify(this.state.newProduct),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => { 
+      return response.json();  
+    })
+    .then(json => {
+      this.setState({
+        products: [ ...this.state.products, json ],  
+        newProduct: {
+          title : "", 
+          img : "product1.png", 
+          description : "", 
+          price : 0, 
+          key : 0, 
+          slug : ""
+        }
+      })
+      
+    })
+  }
+
   render() {
      return  <div className="bg-secondary">
                 <Header color="bg-success"/>
                 <main>
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
-                      {this.renderStatus()}
+                      { this.renderStatus() }
+                      { this.renderNewProduct() }
                       <div className="card-deck">
                         { 
                           this.state.products

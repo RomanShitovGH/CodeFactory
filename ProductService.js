@@ -67,7 +67,14 @@ module.exports = {
         reject (new Error("500"));
       }
     )
-    
+  },
+
+  async addProduct(patch) {
+    try {
+      return await productCollection.insertOne(patch);  
+    } catch (error){
+      return new Error(error);
+    }
   }
 
 }
