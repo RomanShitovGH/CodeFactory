@@ -69,15 +69,12 @@ module.exports = {
     )
   },
 
-  addProduct(patch) {
-    return new Promise (
-      async resolve => {
-        resolve (await productCollection.insertOne(patch));  
-      },
-      reject => {
-        reject (new Error("500"));
-      }
-    )
+  async addProduct(patch) {
+    try {
+      return await productCollection.insertOne(patch);  
+    } catch (error){
+      return new Error(error);
+    }
   }
 
 }
