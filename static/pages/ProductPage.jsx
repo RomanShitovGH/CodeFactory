@@ -1,6 +1,7 @@
 import React from "react";
 import Nav from "../components/Navigation.jsx";
 import ProductBox from "../components/ProductBox.jsx";
+import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
 
@@ -14,6 +15,7 @@ export default class ProductPage extends React.Component {
   }
   
   componentDidMount() {
+    console.log('До сюда дошел');
     fetch("/api/product?key="+this.props.match.params.product)
       .then(response => { 
         return response.json();  
