@@ -5,7 +5,7 @@ const app = express();
 const fs = require('fs');
 const staticMiddleware = express.static("public");
 const bodyParser = require('body-parser');
-
+const cookieParser = require('cookie-parser');
 
 function serveSPA(req, res) {
     const spa = fs.readFileSync("public/spa.html");
@@ -76,15 +76,17 @@ function serveInternalError(req, res) {
 }
 
 function serveLogin(req, res) {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Set-Cookie", "user=123@yandex.ru; Path=/ ");
-    //res.cookie('name', '123@yandex.ru');
-    res.end();
+    const cookie = req.cookies.name;
+    if (cookie === undefined) {
+        res.statusCode = 200;
+        res.setHeader("Set-Cookie", "user=123@yandex.ru; Path=/ ");
+        res.end();
+    }
 }
 
 ProductService.init();
 
+app.use(cookieParser());
 app.get('/', serveSPA);
 app.get('/product/:product', serveSPA);
 app.get('/panel', serveSPA);
@@ -93,7 +95,14 @@ app.get('/panel/product/:id', serveSPA);
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
-
+app.get('/api/login2', function (req, res) {
+    const cookie = req.cookies.name2;
+    if (cookie === undefined) {
+        res.status(200)
+           .cookie('name2', '222@yandex.ru', { Pach: '/', encode: String});
+    };
+    res.end();   
+});
 
 app.use(bodyParser.json()); 
 
