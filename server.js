@@ -74,7 +74,15 @@ function serveInternalError(req, res) {
     res.write(body);
     res.end();
 }
-   
+
+function serveLogin(req, res) {
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("Set-Cookie", "user=123@yandex.ru; Path=/ ");
+    //res.cookie('name', '123@yandex.ru');
+    res.end();
+}
+
 ProductService.init();
 
 app.get('/', serveSPA);
@@ -82,9 +90,10 @@ app.get('/product/:product', serveSPA);
 app.get('/panel', serveSPA);
 app.get('/panel/product', serveSPA);
 app.get('/panel/product/:id', serveSPA);
-
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
+app.get('/api/login', serveLogin);
+
 
 app.use(bodyParser.json()); 
 
