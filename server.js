@@ -86,7 +86,9 @@ function serveLogin(req, res) {
 
 ProductService.init();
 
+app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(staticMiddleware);
 app.get('/', serveSPA);
 app.get('/product/:product', serveSPA);
 app.get('/panel', serveSPA);
@@ -99,12 +101,12 @@ app.get('/api/login2', function (req, res) {
     const cookie = req.cookies.name2;
     if (cookie === undefined) {
         res.status(200)
-           .cookie('name2', '222@yandex.ru', { Pach: '/', encode: String});
+           .cookie('name2', '222@yandex.ru', { Path: '/', encode: String});
     };
     res.end();   
 });
 
-app.use(bodyParser.json()); 
+ 
 
 app.put("/api/product/:id", function(req, res) {
   ProductService.updateProduct(req.params.id, req.body)
@@ -126,7 +128,7 @@ app.post("/api/product", function(req, res) {
       });  
   });
 
-app.use(staticMiddleware);
+
 app.get('/*', serveSPA);
 
 app.listen(3000); //3000 process.env.PORT

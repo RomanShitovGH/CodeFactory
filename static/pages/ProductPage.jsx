@@ -15,7 +15,6 @@ export default class ProductPage extends React.Component {
   }
   
   componentDidMount() {
-    console.log('До сюда дошел');
     fetch("/api/product?key="+this.props.match.params.product)
       .then(response => { 
         return response.json();  
