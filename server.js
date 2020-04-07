@@ -86,7 +86,7 @@ function serveLogin(req, res) {
 
 ProductService.init();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json() );
 app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
@@ -98,10 +98,10 @@ app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
 app.get('/api/login2', function (req, res) {
-    const cookie = req.cookies.name2;
+    const cookie = req.cookies.name;
     if (cookie === undefined) {
         res.status(200)
-           .cookie('name2', '222@yandex.ru', { Path: '/', encode: String});
+           .cookie('name', '123@yandex.ru', { Path: '/', encode: String});
     };
     res.end();   
 });
