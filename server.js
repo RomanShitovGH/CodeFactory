@@ -86,7 +86,7 @@ function serveLogin(req, res) {
 
 ProductService.init();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json() );
 app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
