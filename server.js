@@ -98,14 +98,25 @@ app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
 app.get('/api/login2', function (req, res) {
-    const cookie = req.cookies.name;
+    const cookie = req.cookies.user;
     if (cookie === undefined) {
         res.status(200)
-           .cookie('name', '123@yandex.ru', { Path: '/', encode: String});
+           .cookie('user', '123@yandex.ru', { Path: '/', encode: String});
     };
     res.end();   
 });
 
+app.get('/api/me', function (req, res) {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    if (Object.keys(req.cookies).length !== 0) {
+        res.status(200); 
+        res.write("У вас обнаружена следующие куки " + JSON.stringify(req.cookies));
+    } else {
+        res.status(401);  
+        res.write("Cтатус 401 Unauthorized - Вы не авторизованы");
+    }
+    res.end();   
+});
  
 
 app.put("/api/product/:id", function(req, res) {
