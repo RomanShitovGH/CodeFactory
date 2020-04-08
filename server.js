@@ -111,15 +111,17 @@ app.get('/api/me', function (req, res) {
         DBService.getUserByEmail(req.cookies.user)
             .then( user => {
                 if (user) {
-                    res.json(user); 
+                    res.status(200).json(user);       
                 } else {
-                    res.json({ status: "Статус 403 Forbidden (доступ запрещен)" });    
+                    res.status(403).json("Статус 403 Forbidden (доступ запрещен)");          
                 }
             })
             .catch( err => {
-                serveInternalError(req, res);
+                res.status(404).json("Ошибка - " + err);
             });
-    }  
+    } else {
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+    } 
 });
  
 
