@@ -4,6 +4,7 @@ const omit = require('lodash.omit');
 
 let shopDatabase;
 let productCollection;
+let userCollection;
 
 module.exports = {
   init() { 
@@ -11,6 +12,8 @@ module.exports = {
         .then(function (clientInstance) {
             shopDatabase = clientInstance.db("shop");
             productCollection = shopDatabase.collection("product");
+            userCollection = shopDatabase.collection("user");
+
         })
   },
   
@@ -72,6 +75,14 @@ module.exports = {
   async addProduct(patch) {
     try {
       return await productCollection.insertOne(patch);  
+    } catch (error){
+      return new Error(error);
+    }
+  },
+
+  getUserByEmail(userEmail) {
+    try {
+      return userCollection.findOne({ email: userEmail });  
     } catch (error){
       return new Error(error);
     }
