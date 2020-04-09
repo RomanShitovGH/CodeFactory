@@ -1,4 +1,4 @@
-const ProductService = require("./ProductService.js");
+const DBService = require("./DBService.js");
 const ejs = require("ejs");
 const express = require('express');
 const app = express();
@@ -15,7 +15,7 @@ function serveSPA(req, res) {
 }
 
 function serveProducts(req, res) { 
-    ProductService.getProducts(req.query)
+    DBService.getProducts(req.query)
     .then( products => {
         if (products) {
             res.json(products); 
@@ -30,7 +30,7 @@ function serveProducts(req, res) {
 
 function serveOneProduct(req, res) { 
     if (req.query.key) {
-        ProductService.getProductByKey(req.query)
+        DBService.getProductByKey(req.query)
             .then( (product) => {
                 if (product) {
                     res.json(product);
@@ -40,7 +40,7 @@ function serveOneProduct(req, res) {
                 serveInternalError(req, res);
             })
     } else if (req.query.slug) {
-        ProductService.getProductBySlug(req.query)
+        DBService.getProductBySlug(req.query)
             .then( (product) => {
                 if (product) {
                     res.json(product); 
@@ -50,7 +50,7 @@ function serveOneProduct(req, res) {
                 serveInternalError(req, res);
             })  
     } else if (req.query.id) {
-        ProductService.getProductById(req.query)
+        DBService.getProductById(req.query)
         .then( (product) => {
             if (product) {
                 res.json(product); 
@@ -84,7 +84,7 @@ function serveLogin(req, res) {
     }
 }
 
-ProductService.init();
+DBService.init();
 
 app.use(bodyParser.json() );
 app.use(cookieParser());
@@ -101,26 +101,32 @@ app.get('/api/login2', function (req, res) {
     const cookie = req.cookies.user;
     if (cookie === undefined) {
         res.status(200)
-           .cookie('user', '123@yandex.ru', { Path: '/', encode: String});
+           .cookie('user', '444@yandex.ru', { Path: '/', encode: String});
     };
     res.end();   
 });
 
 app.get('/api/me', function (req, res) {
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    if (Object.keys(req.cookies).length !== 0) {
-        res.status(200); 
-        res.write("У вас обнаружена следующие куки " + JSON.stringify(req.cookies));
+    if (req.cookies.user) {
+        DBService.getUserByEmail(req.cookies.user)
+            .then( user => {
+                if (user) {
+                    res.status(200).json(user);       
+                } else {
+                    res.status(403).json("Статус 403 Forbidden (доступ запрещен)");          
+                }
+            })
+            .catch( err => {
+                res.status(404).json("Ошибка - " + err);
+            });
     } else {
-        res.status(401);  
-        res.write("Cтатус 401 Unauthorized - Вы не авторизованы");
-    }
-    res.end();   
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+    } 
 });
  
 
 app.put("/api/product/:id", function(req, res) {
-  ProductService.updateProduct(req.params.id, req.body)
+    DBService.updateProduct(req.params.id, req.body)
     .then(result => {
         res.json(result);
     })
@@ -130,7 +136,7 @@ app.put("/api/product/:id", function(req, res) {
 });
 
 app.post("/api/product", function(req, res) {
-    ProductService.addProduct(req.body)
+    DBService.addProduct(req.body)
       .then(result => {
           res.json(result.ops[0]);
       })
