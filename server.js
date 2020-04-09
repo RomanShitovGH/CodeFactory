@@ -118,7 +118,9 @@ app.get('/api/me', async function (req, res) {
             const user = await DBService.getUserByEmail(req.cookies.user);
             if (user) {
                 res.status(200).json(user);        
-            };
+            } else {
+                res.status(501).json("Статус 501. Пользователь не найден");
+            }
         } else {
             throw new Error('ошибка!');
         }
