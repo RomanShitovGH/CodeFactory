@@ -77,16 +77,36 @@ function serveInternalError(req, res) {
     res.end();
 }
 
-function serveLogin(req, res) {
-    const userEmail = "123@yandex.ru";
-    const payload = {
-        email: userEmail
-    };
-    const token = jwt.sign(payload, SECRET, {
-        expiresIn: "1m"
-    });
-    res.status(200)
-       .cookie('token', token, { Path: '/', encode: String});
+async function serveLogin(req, res) {
+    let userEmail;
+    let userPassword;
+    try {
+        if (req.query.email) {
+            userEmail = req.query.email;
+        } else {
+            throw new Error('ошибка!');
+        };
+        if (req.query.password) {
+            userPassword = req.query.password;
+        } else {
+            throw new Error('ошибка!');
+        };  
+        const user = await DBService.getUserByEmailPassword(userEmail, userPassword);
+        if (user) {
+            const payload = {
+                email: userEmail
+            };
+            const token = jwt.sign(payload, SECRET, {
+                expiresIn: "1m"
+            });
+            res.status(200)
+                .cookie('token', token, { Path: '/', encode: String});    
+        } else {
+            throw new Error('ошибка!');
+        }    
+    } catch(error) {
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+    }
     res.end();
 }
 
@@ -103,14 +123,7 @@ app.get('/panel/product/:id', serveSPA);
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
-app.get('/api/login2', function (req, res) {
-    const cookie = req.cookies.user;
-    if (cookie === undefined) {
-        res.status(200)
-           .cookie('user', '444@yandex.ru', { Path: '/', encode: String});
-    };
-    res.end();   
-});
+
 
 app.get('/api/me', async function (req, res) {
     try {
