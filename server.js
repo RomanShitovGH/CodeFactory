@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwt = require("jsonwebtoken");
 const SECRET = "Любая строка со случайным набором символов";
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+
 
 function serveSPA(req, res) {
     const spa = fs.readFileSync("public/spa.html");
@@ -91,24 +94,37 @@ async function serveLogin(req, res) {
         } else {
             throw new Error('ошибка!');
         };  
-        const user = await DBService.getUserByEmailPassword(userEmail, userPassword);
+        const user = await DBService.getUserByEmail(userEmail);
         if (user) {
-            const payload = {
-                email: userEmail
-            };
-            const token = jwt.sign(payload, SECRET, {
-                expiresIn: "1m"
-            });
-            res.status(200)
-                .cookie('token', token, { Path: '/', encode: String});    
+            const result = bcrypt.compareSync(userPassword, user.passwordHash);
+            if (result) {   
+                const payload = {
+                    email: userEmail
+                };
+                const token = jwt.sign(payload, SECRET, {
+                    expiresIn: "1m"
+                });
+                res.status(200)
+                    .cookie('token', token, { Path: '/', encode: String});
+            } else {
+                throw new Error('ошибка!');
+            }         
         } else {
             throw new Error('ошибка!');
         }    
     } catch(error) {
-        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен) " + error);
     }
     res.end();
 }
+
+async function serveBcrypt(req, res) {
+    if (req.query.password) {
+        const hash = await bcrypt.hashSync(req.query.password, saltRounds);    
+        return hash;
+    }
+}
+
 
 DBService.init();
 
@@ -123,7 +139,7 @@ app.get('/panel/product/:id', serveSPA);
 app.get('/api/products', serveProducts);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
-
+app.get('/api/bcrypt', serveBcrypt);
 
 app.get('/api/me', async function (req, res) {
     try {
