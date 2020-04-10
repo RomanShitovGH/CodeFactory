@@ -83,7 +83,7 @@ function serveLogin(req, res) {
         email: userEmail
     };
     const token = jwt.sign(payload, SECRET, {
-        expiresIn: "5m"
+        expiresIn: "1m"
     });
     res.status(200)
        .cookie('token', token, { Path: '/', encode: String});
@@ -114,12 +114,13 @@ app.get('/api/login2', function (req, res) {
 
 app.get('/api/me', async function (req, res) {
     try {
-        if (req.cookies.user) {
-            const user = await DBService.getUserByEmail(req.cookies.user);
+        const payload = jwt.verify(req.cookies.token, SECRET);
+        if (payload) {
+            const user = await DBService.getUserByEmail(payload.email);
             if (user) {
                 res.status(200).json(user);        
             } else {
-                res.status(501).json("Статус 501. Пользователь не найден");
+                res.status(500).json("Статус 500. Пользователь не найден");
             }
         } else {
             throw new Error('ошибка!');
