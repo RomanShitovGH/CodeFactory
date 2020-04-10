@@ -121,7 +121,7 @@ app.get('/api/me', async function (req, res) {
                 res.status(200).json(user);        
             } else {
                 res.status(500).json("Статус 500. Пользователь не найден");
-            }
+            } 
         } else {
             throw new Error('ошибка!');
         }
