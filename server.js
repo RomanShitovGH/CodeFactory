@@ -6,6 +6,8 @@ const fs = require('fs');
 const staticMiddleware = express.static("public");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const jwt = require("jsonwebtoken");
+const SECRET = "Любая строка со случайным набором символов";
 
 function serveSPA(req, res) {
     const spa = fs.readFileSync("public/spa.html");
@@ -76,12 +78,16 @@ function serveInternalError(req, res) {
 }
 
 function serveLogin(req, res) {
-    const cookie = req.cookies.name;
-    if (cookie === undefined) {
-        res.statusCode = 200;
-        res.setHeader("Set-Cookie", "user=123@yandex.ru; Path=/ ");
-        res.end();
-    }
+    const userEmail = "123@yandex.ru";
+    const payload = {
+        email: userEmail
+    };
+    const token = jwt.sign(payload, SECRET, {
+        expiresIn: "1m"
+    });
+    res.status(200)
+       .cookie('token', token, { Path: '/', encode: String});
+    res.end();
 }
 
 DBService.init();
@@ -106,22 +112,23 @@ app.get('/api/login2', function (req, res) {
     res.end();   
 });
 
-app.get('/api/me', function (req, res) {
-    if (req.cookies.user) {
-        DBService.getUserByEmail(req.cookies.user)
-            .then( user => {
-                if (user) {
-                    res.status(200).json(user);       
-                } else {
-                    res.status(403).json("Статус 403 Forbidden (доступ запрещен)");          
-                }
-            })
-            .catch( err => {
-                res.status(404).json("Ошибка - " + err);
-            });
-    } else {
+app.get('/api/me', async function (req, res) {
+    try {
+        const payload = jwt.verify(token, SECRET);
+        if (req.cookies.user) {
+            const user = await DBService.getUserByEmail(req.cookies.user);
+            if (user) {
+                res.status(200).json(user);        
+            } else {
+                res.status(500).json("Статус 500. Пользователь не найден");
+            }
+        } else {
+            throw new Error('ошибка!');
+        }
+    } catch(error) {
         res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
-    } 
+    }
+    res.end();       
 });
  
 
