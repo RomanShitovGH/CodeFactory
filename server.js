@@ -102,7 +102,7 @@ async function serveLogin(req, res) {
                     email: userEmail
                 };
                 const token = jwt.sign(payload, SECRET, {
-                    expiresIn: "1m"
+                    expiresIn: "5m"
                 });
                 res.status(200)
                     .cookie('token', token, { Path: '/', encode: String});
@@ -121,10 +121,32 @@ async function serveLogin(req, res) {
 async function serveBcrypt(req, res) {
     if (req.query.password) {
         const hash = await bcrypt.hashSync(req.query.password, saltRounds);    
-        return hash;
+        res.write(hash);  
     }
+    res.end();
 }
 
+function checkToken(req, res, next) {
+    try {
+        if (req.cookies.token) {
+            const payload = jwt.verify(req.cookies.token, SECRET);
+
+            if (!payload) {
+            res.write("Необходимо авторизоваться");
+            res.end();
+            return;
+            }
+        
+            req.someData = { processed: true, email: payload.email };
+            next();
+        } else {
+            res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+        }
+    } catch {
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");    
+    }
+
+}
 
 DBService.init();
 
@@ -137,15 +159,16 @@ app.get('/panel', serveSPA);
 app.get('/panel/product', serveSPA);
 app.get('/panel/product/:id', serveSPA);
 app.get('/api/products', serveProducts);
+app.get('/api/product?:key_slug', checkToken);
 app.get('/api/product?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
 app.get('/api/bcrypt', serveBcrypt);
 
+app.get('/api/me', checkToken);
 app.get('/api/me', async function (req, res) {
     try {
-        const payload = jwt.verify(req.cookies.token, SECRET);
-        if (payload) {
-            const user = await DBService.getUserByEmail(payload.email);
+        if (req.someData.processed) {
+            const user = await DBService.getUserByEmail(req.someData.email);
             if (user) {
                 res.status(200).json(user);        
             } else {
@@ -160,8 +183,8 @@ app.get('/api/me', async function (req, res) {
     res.end();       
 });
  
-
-app.put("/api/product/:id", function(req, res) {
+app.put('/api/product/:id', checkToken);
+app.put('/api/product/:id', function(req, res) {
     DBService.updateProduct(req.params.id, req.body)
     .then(result => {
         res.json(result);
@@ -171,7 +194,8 @@ app.put("/api/product/:id", function(req, res) {
     });  
 });
 
-app.post("/api/product", function(req, res) {
+app.post('/api/products', checkToken);
+app.post('/api/products', function(req, res) {
     DBService.addProduct(req.body)
       .then(result => {
           res.json(result.ops[0]);
