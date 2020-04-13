@@ -87,12 +87,12 @@ async function serveLogin(req, res) {
         if (req.query.email) {
             userEmail = req.query.email;
         } else {
-            throw new Error('ошибка!');
+            throw new Error('Ошибка! Не указан Email пользователя');
         };
         if (req.query.password) {
             userPassword = req.query.password;
         } else {
-            throw new Error('ошибка!');
+            throw new Error('Ошибка! Не указан пароль пользователя');
         };  
         const user = await DBService.getUserByEmail(userEmail);
         if (user) {
@@ -107,13 +107,13 @@ async function serveLogin(req, res) {
                 res.status(200)
                     .cookie('token', token, { Path: '/', encode: String});
             } else {
-                throw new Error('ошибка!');
+                throw new Error('Ошибка! Введен неверный пароль');
             }         
         } else {
-            throw new Error('ошибка!');
+            throw new Error('Ошибка! Пользователь не найден');
         }    
     } catch(error) {
-        res.status(403).json("Статус 403 Forbidden (доступ запрещен) " + error);
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен). " + error);
     }
     res.end();
 }
@@ -129,21 +129,14 @@ async function serveBcrypt(req, res) {
 function checkToken(req, res, next) {
     try {
         if (req.cookies.token) {
-            const payload = jwt.verify(req.cookies.token, SECRET);
-
-            if (!payload) {
-            res.write("Необходимо авторизоваться");
-            res.end();
-            return;
-            }
-        
+            const payload = jwt.verify(req.cookies.token, SECRET);        
             req.someData = { processed: true, email: payload.email };
             next();
         } else {
-            res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
+            throw new Error('Ошибка! Необходимо авторизоваться');
         }
-    } catch {
-        res.status(403).json("Статус 403 Forbidden (доступ запрещен)");    
+    } catch(error) {
+        res.status(403).json("Статус 403 Forbidden (доступ запрещен). " + error);    
     }
 
 }
@@ -175,7 +168,7 @@ app.get('/api/me', async function (req, res) {
                 res.status(500).json("Статус 500. Пользователь не найден");
             } 
         } else {
-            throw new Error('ошибка!');
+            throw new Error('Ошибка! Необходимо авторизоваться');
         }
     } catch(error) {
         res.status(403).json("Статус 403 Forbidden (доступ запрещен)");
