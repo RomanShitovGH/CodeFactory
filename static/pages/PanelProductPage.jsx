@@ -42,7 +42,7 @@ export default class PanelProductPage extends React.Component {
 
   onSave (event) {
     event.preventDefault();
-    fetch(`/api/product/${this.props.match.params.id}`, {
+    fetch(`/api/products/${this.props.match.params.id}`, {
       method: "put",
       body: JSON.stringify(this.state.product),
       headers: {

@@ -147,13 +147,13 @@ app.use(bodyParser.json() );
 app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
-app.get('/product/:product', serveSPA);
+app.get('/products/:product', serveSPA);
 app.get('/panel', serveSPA);
-app.get('/panel/product', serveSPA);
-app.get('/panel/product/:id', serveSPA);
+app.get('/panel/products', serveSPA);
+app.get('/panel/products/:id', serveSPA);
 app.get('/api/products', serveProducts);
-app.get('/api/product?:key_slug', checkToken);
-app.get('/api/product?:key_slug', serveOneProduct);
+app.get('/api/products?:key_slug', checkToken);
+app.get('/api/products?:key_slug', serveOneProduct);
 app.get('/api/login', serveLogin);
 app.get('/api/bcrypt', serveBcrypt);
 
@@ -176,8 +176,8 @@ app.get('/api/me', async function (req, res) {
     res.end();       
 });
  
-app.put('/api/product/:id', checkToken);
-app.put('/api/product/:id', function(req, res) {
+app.put('/api/products/:id', checkToken);
+app.put('/api/products/:id', function(req, res) {
     DBService.updateProduct(req.params.id, req.body)
     .then(result => {
         res.json(result);

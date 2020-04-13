@@ -17,10 +17,10 @@ class App extends React.Component {
     return  <Router history={ history }>
               <Switch>
                 <Route exact path="/" component={ IndexPage } />
-                <Route exact path="/product/:product" component={ ProductPage } />
+                <Route exact path="/products/:product" component={ ProductPage } />
                 <Route exact path="/panel" component={ PanelPage } />
-                <Route exact path="/panel/product" component={ PanelProductsPage } />
-                <Route exact path="/panel/product/:id" component={ PanelProductPage } />
+                <Route exact path="/panel/products" component={ PanelProductsPage } />
+                <Route exact path="/panel/products/:id" component={ PanelProductPage } />
                 <Route component={ NotFound } />
               </Switch>
             </Router>;
