@@ -86,6 +86,14 @@ module.exports = {
     } catch (error){
       return new Error(error);
     }
-  }
+  },
+
+  // getUserByEmailPassword(userEmail, userPasswordHash) {
+  //   try {
+  //     return userCollection.findOne({ email: userEmail, passwordHash: userPasswordHash });  
+  //   } catch (error){
+  //     return new Error(error);
+  //   }
+  // }
 
 }

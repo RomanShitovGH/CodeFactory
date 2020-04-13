@@ -69,7 +69,7 @@ export default class PanelProductsPage extends React.Component {
 
   renderProducts() {
     return this.state.products.map(product => {
-      const linkProduct = "/panel/product/" + product._id;
+      const linkProduct = "/panel/products/" + product._id;
       const imgProduct = "/" + product.img;
       return (
         <div className="card" key={product.key} slug={product.slug} id={product._id}>
@@ -139,7 +139,7 @@ export default class PanelProductsPage extends React.Component {
 
   onAdd (event) {
     event.preventDefault();
-    fetch(`/api/product`, {
+    fetch(`/api/products`, {
       method: "post",
       body: JSON.stringify(this.state.newProduct),
       headers: {

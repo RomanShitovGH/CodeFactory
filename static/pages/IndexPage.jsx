@@ -55,7 +55,7 @@ export default class IndexPage extends React.Component {
 
   renderProducts() {
     return this.state.products.map(product => {
-      const linkProduct = "/product/" + product.key;
+      const linkProduct = "/products/" + product.key;
       return (
         <div className="card" key={product.key} slug={product.slug}>
           <img className="card-img-top" src={product.img} alt="Card image cap" />
