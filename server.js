@@ -84,38 +84,35 @@ async function serveLogin(req, res) {
     let userEmail;
     let userPassword;
     try {
-        if (req.query.email) {
-            userEmail = req.query.email;
+        if (req.body.login) {
+            userEmail = req.body.login;
         } else {
-            throw new Error('Ошибка! Не указан Email пользователя');
+            throw new Error('Не указан Логин');
         };
-        if (req.query.password) {
-            userPassword = req.query.password;
+        if (req.body.password) {
+            userPassword = req.body.password;
         } else {
-            throw new Error('Ошибка! Не указан пароль пользователя');
-        };  
+            throw new Error('Не указан Пароль');
+        }; 
         const user = await DBService.getUserByEmail(userEmail);
         if (user) {
             const result = bcrypt.compareSync(userPassword, user.passwordHash);
             if (result) {   
-                const payload = {
-                    email: userEmail
-                };
-                const token = jwt.sign(payload, SECRET, {
-                    expiresIn: "5m"
-                });
+                const payload = { email: userEmail };
+                const token = jwt.sign(payload, SECRET, { expiresIn: "5m" });
                 res.status(200)
                     .cookie('token', token, { Path: '/', encode: String});
+                res.end();    
             } else {
-                throw new Error('Ошибка! Введен неверный пароль');
+                throw new Error('Не верна пара Логин/Пароль');
             }         
         } else {
-            throw new Error('Ошибка! Пользователь не найден');
+            throw new Error('Не верна пара Логин/Пароль');
         }    
     } catch(error) {
         res.status(403).json("Статус 403 Forbidden (доступ запрещен). " + error);
     }
-    res.end();
+    
 }
 
 async function serveBcrypt(req, res) {
@@ -151,10 +148,11 @@ app.get('/products/:product', serveSPA);
 app.get('/panel', serveSPA);
 app.get('/panel/products', serveSPA);
 app.get('/panel/products/:id', serveSPA);
+
+app.get('/api/products/:key_slug', checkToken);
+app.get('/api/products/:key_slug', serveOneProduct);
 app.get('/api/products', serveProducts);
-app.get('/api/products?:key_slug', checkToken);
-app.get('/api/products?:key_slug', serveOneProduct);
-app.get('/api/login', serveLogin);
+
 app.get('/api/bcrypt', serveBcrypt);
 
 app.get('/api/me', checkToken);
@@ -186,6 +184,8 @@ app.put('/api/products/:id', function(req, res) {
         serveInternalError(req, res, err.message);
     });  
 });
+
+app.post('/api/login', serveLogin);
 
 app.post('/api/products', checkToken);
 app.post('/api/products', function(req, res) {

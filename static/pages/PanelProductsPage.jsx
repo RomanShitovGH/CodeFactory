@@ -25,7 +25,9 @@ export default class PanelProductsPage extends React.Component {
     this.setState({
       status: "pending"
     });
-    fetch("/api/products")
+    fetch("/api/products", {
+      credentials: "same-origin"
+    })
       .then(function (response) {
         return response.json();
       })
@@ -78,7 +80,7 @@ export default class PanelProductsPage extends React.Component {
             <h5 className="card-title">{product.title}</h5>
             <p className="card-text">{product.description}</p>
             <p className="card-text">Цена: {product.price}</p>
-            <Link to={linkProduct}>Купить</Link>
+            <Link to={linkProduct}>Изменить</Link>
           </div>
         </div>
       );
