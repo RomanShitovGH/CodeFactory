@@ -2,6 +2,9 @@ import React from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
+const cookieParser = require('cookie-parser');
+const jwt = require("jsonwebtoken");
+
 
 export default class PanelLogin extends React.Component {
   constructor(props) {
@@ -14,6 +17,11 @@ export default class PanelLogin extends React.Component {
       }  
     }
   }
+  
+  // componentDidMount() {
+  //   const cookies = Cookie.parse(document.cookie);
+  //   console.log("Вот куки - " + cookies);  
+  // }
   
   onChange (event) {
     const name = event.target.name;

@@ -145,7 +145,7 @@ app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
 app.get('/products/:product', serveSPA);
-app.get('/panel', checkToken);
+//app.get('/panel', checkToken);
 app.get('/panel', serveSPA);
 app.get('/panel/products', serveSPA);
 app.get('/panel/products/:id', serveSPA);
