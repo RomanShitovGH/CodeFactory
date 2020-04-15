@@ -16,6 +16,7 @@ export default class PanelProductPage extends React.Component {
   
   componentDidMount() {
     fetch(`/api/products/${this.props.match.params.id}`, {
+      method: "get",
       credentials: "same-origin"
     })
       .then(response => { 

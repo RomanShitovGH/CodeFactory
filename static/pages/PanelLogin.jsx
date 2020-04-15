@@ -1,7 +1,5 @@
 import React from "react";
-import Nav from "../components/Navigation.jsx";
 import Header from "../components/Header.jsx";
-import ProductBox from "../components/ProductBox.jsx";
 import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
 
@@ -17,24 +15,6 @@ export default class PanelLogin extends React.Component {
     }
   }
   
-//   componentDidMount() {
-//     fetch(`/api/product?id=${this.props.match.params.id}`)
-//       .then(response => { 
-//         return response.json();  
-//       })
-//       .then(json => {
-//         this.setState({
-//           product: json,
-//           status: "ready"  
-//         })
-        
-//       })
-//       .catch(error => {
-//         this.setState({
-//           status: "error"
-//         })
-//       })           
-//   }
   onChange (event) {
     const name = event.target.name;
     const prod = this.state.credentials;
@@ -55,7 +35,7 @@ export default class PanelLogin extends React.Component {
         console.log("response.status = " + response.status);
         if (response.status === 200) {
           this.setState({
-            status: "ready"
+            status: "logged"
           })  
         } else {
             throw new Error('Получена ошибка с кодом - ' + response.status);
@@ -95,7 +75,7 @@ export default class PanelLogin extends React.Component {
 
   renderStatus() {
     switch (this.state.status) {
-      case "ready":
+      case "logged":
         return ( <div className="alert alert-primary" role="alert">
                  Вы успешно авторизированны
                </div> );
@@ -128,7 +108,7 @@ export default class PanelLogin extends React.Component {
                       </ol>
                     </nav>
                     { this.renderStatus() }
-                    { this.renderForm() }
+                    { this.state.status !== "logged" && this.renderForm() }
                   </div>
                 </div>
               </main>

@@ -145,13 +145,14 @@ app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
 app.get('/products/:product', serveSPA);
+app.get('/panel', checkToken);
 app.get('/panel', serveSPA);
 app.get('/panel/products', serveSPA);
 app.get('/panel/products/:id', serveSPA);
 
 app.get('/api/products/:id', checkToken);
 app.get('/api/products/:id', serveOneProduct);
-app.get('/api/products/key/:key', checkToken);
+
 app.get('/api/products/key/:key', serveOneProduct);
 app.get('/api/products', serveProducts);
 
