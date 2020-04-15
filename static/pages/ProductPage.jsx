@@ -15,7 +15,7 @@ export default class ProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch("/api/products?key="+this.props.match.params.product, {
+    fetch("/api/products/key/"+this.props.match.params.product, {
       credentials: "same-origin"
     })
       .then(response => { 

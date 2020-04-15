@@ -34,8 +34,8 @@ function serveProducts(req, res) {
 }
 
 function serveOneProduct(req, res) { 
-    if (req.query.key) {
-        DBService.getProductByKey(req.query)
+    if (req.params.key) {
+        DBService.getProductByKey(req.params)
             .then( (product) => {
                 if (product) {
                     res.json(product);
@@ -54,8 +54,8 @@ function serveOneProduct(req, res) {
             .catch( err => {
                 serveInternalError(req, res);
             })  
-    } else if (req.query.id) {
-        DBService.getProductById(req.query)
+    } else if (req.params.id) {
+        DBService.getProductById(req.params)
         .then( (product) => {
             if (product) {
                 res.json(product); 
@@ -149,8 +149,10 @@ app.get('/panel', serveSPA);
 app.get('/panel/products', serveSPA);
 app.get('/panel/products/:id', serveSPA);
 
-app.get('/api/products/:key_slug', checkToken);
-app.get('/api/products/:key_slug', serveOneProduct);
+app.get('/api/products/:id', checkToken);
+app.get('/api/products/:id', serveOneProduct);
+app.get('/api/products/key/:key', checkToken);
+app.get('/api/products/key/:key', serveOneProduct);
 app.get('/api/products', serveProducts);
 
 app.get('/api/bcrypt', serveBcrypt);
