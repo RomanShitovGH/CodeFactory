@@ -99,7 +99,7 @@ async function serveLogin(req, res) {
             const result = bcrypt.compareSync(userPassword, user.passwordHash);
             if (result) {   
                 const payload = { email: userEmail };
-                const token = jwt.sign(payload, SECRET, { expiresIn: "5m" });
+                const token = jwt.sign(payload, SECRET, { expiresIn: "1m" });
                 res.status(200)
                     .cookie('token', token, { Path: '/', encode: String});
                 res.end();    
@@ -145,7 +145,6 @@ app.use(cookieParser());
 app.use(staticMiddleware);
 app.get('/', serveSPA);
 app.get('/products/:product', serveSPA);
-//app.get('/panel', checkToken);
 app.get('/panel', serveSPA);
 app.get('/panel/products', serveSPA);
 app.get('/panel/products/:id', serveSPA);

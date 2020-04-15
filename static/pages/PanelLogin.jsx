@@ -2,8 +2,8 @@ import React from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
-const cookieParser = require('cookie-parser');
-const jwt = require("jsonwebtoken");
+const Cookie = require('cookie');
+const jwt = require('jsonwebtoken');
 
 
 export default class PanelLogin extends React.Component {
@@ -18,10 +18,33 @@ export default class PanelLogin extends React.Component {
     }
   }
   
-  // componentDidMount() {
-  //   const cookies = Cookie.parse(document.cookie);
-  //   console.log("Вот куки - " + cookies);  
-  // }
+  componentDidMount() {
+    try {
+      if (document.cookie) {
+        const cookies = Cookie.parse(document.cookie);
+        const payload = jwt.decode(cookies.token)
+        const timestampInSeconds = new Date().getTime();
+        if (timestampInSeconds > payload.exp * 1000) {
+          this.setState({
+            status: "pending"
+          })
+        } else {
+          this.setState({
+            status: "logged"
+          })
+        }  
+      } else {
+        this.setState({
+          status: "pending"
+        })
+      }
+    } catch(error) {
+      this.setState({
+        status: "error"
+      })
+      console.log("Ошибка - " + error);
+    }  
+  }
   
   onChange (event) {
     const name = event.target.name;
@@ -40,7 +63,6 @@ export default class PanelLogin extends React.Component {
       }
     })
       .then(response => { 
-        console.log("response.status = " + response.status);
         if (response.status === 200) {
           this.setState({
             status: "logged"
@@ -57,7 +79,17 @@ export default class PanelLogin extends React.Component {
       }) 
   }
   
-  renderForm() {
+  onLogout (event) {
+    event.preventDefault();
+    document.cookie = 'token=; Path=/; Max-Age=0;';
+    this.setState({
+      status: "pending"
+    });
+
+
+  }
+
+  renderFormLogin() {
     return (
       <form>
         <label>Авторизация</label>
@@ -80,6 +112,14 @@ export default class PanelLogin extends React.Component {
       </form>
     )
   }  
+
+  renderFormLogout() {
+    return (
+      <form>
+        <button type="button" className="btn btn-primary" onClick={ this.onLogout.bind(this) }>Выйти</button>
+      </form>
+    )
+  }
 
   renderStatus() {
     switch (this.state.status) {
@@ -116,7 +156,7 @@ export default class PanelLogin extends React.Component {
                       </ol>
                     </nav>
                     { this.renderStatus() }
-                    { this.state.status !== "logged" && this.renderForm() }
+                    { this.state.status !== "logged" ? this.renderFormLogin() : this.renderFormLogout() }
                   </div>
                 </div>
               </main>
