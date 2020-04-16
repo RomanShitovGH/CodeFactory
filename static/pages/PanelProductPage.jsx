@@ -15,8 +15,14 @@ export default class PanelProductPage extends React.Component {
   }
   
   componentDidMount() {
-    fetch(`/api/product?id=${this.props.match.params.id}`)
+    fetch(`/api/products/${this.props.match.params.id}`, {
+      method: "get",
+      credentials: "same-origin"
+    })
       .then(response => { 
+        if (response.status === 401 || response.status === 403) {
+          window.location = "/panel/login";
+        }
         return response.json();  
       })
       .then(json => {
@@ -50,6 +56,9 @@ export default class PanelProductPage extends React.Component {
       }
     })
     .then(response => { 
+      if (response.status === 401 || response.status === 403) {
+        window.location = "/panel/login";
+      }
       return response.json();  
     })
     .then(json => {
@@ -144,7 +153,7 @@ export default class PanelProductPage extends React.Component {
                     <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                          <Link to="/panel/product">Каталог</Link>
+                          <Link to="/panel/products">Каталог</Link>
                         </li>
                         <li className="breadcrumb-item"><a href="#">Вентиляция</a></li>
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>

@@ -11,7 +11,7 @@ export default class PanelPage extends React.Component {
                 <main>
                   <div className="row">
                     <div className="col-md-8 offset-md-2 col-sm-10 offset-sm-1 fon">
-                      <Link to="/panel/product">Ссылка на каталог товаров</Link>            
+                      <Link to="/panel/products">Ссылка на каталог товаров</Link>            
                     </div>
                   </div>
                 </main>
