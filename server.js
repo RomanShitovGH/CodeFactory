@@ -153,7 +153,7 @@ app.get('/api/products/:id', checkToken);
 app.get('/api/products/:id', serveOneProduct);
 
 app.get('/api/products/key/:key', serveOneProduct);
-app.get('/api/products', checkToken);
+
 app.get('/api/products', serveProducts);
 
 app.get('/api/bcrypt', serveBcrypt);
