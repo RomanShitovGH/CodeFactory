@@ -56,6 +56,9 @@ export default class PanelProductPage extends React.Component {
       }
     })
     .then(response => { 
+      if (response.status === 401 || response.status === 403) {
+        window.location = "/panel/login";
+      }
       return response.json();  
     })
     .then(json => {
