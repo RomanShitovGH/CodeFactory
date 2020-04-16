@@ -29,6 +29,9 @@ export default class PanelProductsPage extends React.Component {
       credentials: "same-origin"
     })
       .then(function (response) {
+        if (response.status === 401 || response.status === 403) {
+          window.location = "/panel/login";
+        }
         return response.json();
       })
       .then(function (json) {  

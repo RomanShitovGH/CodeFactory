@@ -149,7 +149,7 @@ export default class PanelLogin extends React.Component {
                     <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                          <Link to="/panel/product">Каталог</Link>
+                          <Link to="/panel/products">Каталог</Link>
                         </li>
                         <li className="breadcrumb-item"><a href="#">Вентиляция</a></li>
                         <li className="breadcrumb-item active" aria-current="page">ПВУ</li>
