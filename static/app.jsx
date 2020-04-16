@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import IndexPage from "./pages/IndexPage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import PanelPage from "./pages/PanelPage.jsx";

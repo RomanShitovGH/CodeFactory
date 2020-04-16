@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 const jwt = require("jsonwebtoken");
 const SECRET = "Любая строка со случайным набором символов";
